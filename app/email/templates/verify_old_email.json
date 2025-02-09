@@ -89,16 +89,17 @@
             "style": {
                 "backgroundColor": null,
                 "padding": {
-                    "top": 16,
-                    "bottom": 16,
-                    "right": 24,
-                    "left": 24
+                    "top": 32,
+                    "bottom": 32,
+                    "right": 32,
+                    "left": 32
                 }
             },
             "props": {
                 "childrenIds": [
                     "block-1737184216000",
-                    "block-1737184229296"
+                    "block-1737184229296",
+                    "block-1737184229297"
                 ]
             }
         }
@@ -110,11 +111,13 @@
                 "text": "Your email has been changed"
             },
             "style": {
+                "color": "#1c1917",
+                "marginBottom": 16,
                 "padding": {
-                    "top": 16,
-                    "bottom": 16,
-                    "right": 24,
-                    "left": 24
+                    "top": 0,
+                    "bottom": 0,
+                    "right": 0,
+                    "left": 0
                 }
             }
         }
@@ -124,15 +127,39 @@
         "data": {
             "style": {
                 "fontWeight": "normal",
+                "color": "#44403c",
+                "marginBottom": 24,
                 "padding": {
-                    "top": 16,
-                    "bottom": 16,
-                    "right": 24,
-                    "left": 24
+                    "top": 0,
+                    "bottom": 0,
+                    "right": 0,
+                    "left": 0
                 }
             },
             "props": {
-                "text": "Your sign-in email address for devscript was changed to {{ new_email }}."
+                "text": "Your sign-in email address for devscript was changed to <strong>{{ new_email }}</strong>. If you did not make this change, please contact support immediately or secure your account by resetting your password."
+            }
+        }
+    },
+    "block-1737184229297": {
+        "type": "Button",
+        "data": {
+            "style": {
+                "backgroundColor": "#022c22",
+                "color": "#ffffff",
+                "borderRadius": 8,
+                "padding": {
+                    "top": 12,
+                    "bottom": 12,
+                    "right": 24,
+                    "left": 24
+                },
+                "textAlign": "center",
+                "marginTop": 8
+            },
+            "props": {
+                "text": "Login to your account",
+                "url": "{{ base_url }}/login"
             }
         }
     }

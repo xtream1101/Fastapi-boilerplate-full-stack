@@ -1,34 +1,40 @@
-{% set page_title = "Change Email" %}
+{% extends "common/templates/_layouts/base_logged_in.html" %}
 
-{% extends "common/templates/_layouts/base.html" %}
+{% block title %}Change Email - FastAPI Boilerplate{% endblock %}
 
 {% block content %}
-<div class="container mx-auto pb-16">
-    <div class="max-w-2xl mx-auto bg-white dark:bg-stone-950 rounded-xl shadow-xl p-8">
+<div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md mx-auto space-y-8 p-8 rounded-lg shadow-sm" style="background-color: var(--bg-footer)">
+        <div>
+            <h1 class="mt-6 text-center text-3xl font-bold" style="color: var(--color-primary)">
+                Change Email Address
+            </h1>
+            <p class="mt-2 text-center text-sm" style="color: var(--text-primary)">
+                We'll send you a confirmation email to verify your new email address
+            </p>
+        </div>
 
-        <h1 class="text-2xl font-semibold mb-6 text-center">
-            Change Email Address
-        </h1>
-
-        <p class="text-sm text-stone-500 text-center mb-8">
-            We'll send you a confirmation email to verify your new email address.
-        </p>
-
-        <form action="{{ url_for('auth.change_email.post') }}" method="POST" class="space-y-4">
+        <form action="{{ url_for('auth.change_email.post') }}" method="POST" class="mt-8 space-y-6">
             <div>
-                <label for="new_email" class="block text-sm font-medium">New Email Address</label>
-                <input type="email" name="new_email" id="new_email" required class="form-input">
+                <label for="new_email" class="block text-sm font-medium" style="color: var(--text-primary)">
+                    New Email Address
+                </label>
+                <input type="email" name="new_email" id="new_email" required
+                    class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                    style="--tw-ring-color: var(--color-primary); border-color: var(--border-color); background-color: var(--bg-main); color: var(--text-primary)">
             </div>
 
             <div>
-                <button type="submit" class="w-full btn-primary">
+                <button type="submit" class="btn-primary w-full">
                     Change Email
                 </button>
             </div>
         </form>
 
-        <div class="mt-4 text-center">
-            <a href="{{ url_for('auth.account_settings') }}" class="text-sm font-medium text-yellow-600 hover:text-yellow-500">
+        <div class="text-center mt-6">
+            <a href="{{ url_for('auth.account_settings') }}"
+               class="text-sm font-medium hover:opacity-90"
+               style="color: var(--color-primary)">
                 Back to Account Settings
             </a>
         </div>

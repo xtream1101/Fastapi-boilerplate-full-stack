@@ -2,6 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .btn-circle-sm {
+    @apply p-1.5 rounded-full;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-700;
+  }
+
+  .btn-secondary--emerald {
+    @apply bg-emerald-100 hover:bg-emerald-200 text-emerald-700;
+  }
+
+  .btn-secondary--red {
+    @apply bg-red-100 hover:bg-red-200 text-red-700;
+  }
+
+  .form-input {
+    @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm;
+  }
+}
+
 @layer base {
   :root {
     --ss-primary-color: theme('colors.emerald.800');

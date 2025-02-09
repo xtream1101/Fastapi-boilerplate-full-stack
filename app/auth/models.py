@@ -1,9 +1,11 @@
 import uuid
 from datetime import datetime, timezone
+from enum import Enum
 from typing import List
 
 import sqlalchemy as sa
 from pydantic import validate_email
+from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 
 from app.auth.serializers import UserSerializer
@@ -116,6 +118,11 @@ class Provider(Base):
         return value.lower().strip()
 
 
+class APIKeyAccessLevel(str, Enum):
+    READ = "read"
+    READ_WRITE = "read_write"
+
+
 class APIKey(Base):
     __tablename__ = "api_keys"
 
@@ -133,6 +140,9 @@ class APIKey(Base):
         sa.DateTime(timezone=True), nullable=True
     )
     is_active: Mapped[bool] = mapped_column(sa.Boolean, default=True, nullable=False)
+    access_level: Mapped[APIKeyAccessLevel] = mapped_column(
+        SQLEnum(APIKeyAccessLevel), default=APIKeyAccessLevel.READ, nullable=False
+    )
 
     # Foreign key to user
     user_id: Mapped[uuid.UUID] = mapped_column(

@@ -1,0 +1,82 @@
+{% extends "auth/templates/_layouts/settings_base.html" %}
+{% set active_section = "profile" %}
+
+{% block settings_content %}
+<div class="rounded-lg p-6 shadow-sm" style="background-color: var(--bg-footer)">
+    <div class="border-b border-gray-200 pb-4 mb-4">
+        <h2 class="text-lg font-semibold" style="color: var(--color-primary)">Profile Information</h2>
+        <p class="text-sm opacity-70">Update your profile information</p>
+    </div>
+
+    <div class="space-y-4">
+        <!-- Display Name -->
+        <div>
+            <div class="flex items-center gap-2">
+                <h3 id="displayNameView" class="text-lg font-medium">{{ user.display_name }}</h3>
+                <button onclick="toggleDisplayNameEdit()" class="text-yellow-600 hover:text-yellow-500 transition-colors" title="Edit display name">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+                <form id="displayNameForm" action="{{ url_for('auth.update_display_name.post') }}" method="POST" class="hidden" style="display: none">
+                    <div class="flex flex-1 items-center gap-2">
+                        <input type="text" name="display_name" value="{{ user.display_name }}" class="form-input" required placeholder="Enter your display name">
+                        <button type="submit" class="btn-secondary--emerald btn-circle-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                            </svg>
+                        </button>
+                        <button type="button" onclick="toggleDisplayNameEdit()" class="btn-secondary--red btn-circle-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Email -->
+        <div class="space-y-1">
+            <div class="flex items-center gap-2">
+                <p class="opacity-70">{{ user.email }} {% if pending_email %} ({{ pending_email }} : pending) <a href="{{ url_for('auth.change_email_cancel')}}" style="color: var(--color-accent-red)" class="hover:opacity-80 text-sm">Cancel</a> {% endif %}</p>
+                {% if not pending_email %}
+                    <a href="{{ url_for('auth.change_email') }}" class="text-yellow-600 hover:text-yellow-500 transition-colors text-sm">
+                        Change
+                    </a>
+                {% endif %}
+            </div>
+            <p class="text-sm opacity-70">
+                Member since
+                <span
+                    data-timestamp="{{ user.registered_at.isoformat() }}"
+                    data-timestamp-format="MMMM DD, YYYY"
+                >
+                    {{ user.registered_at.strftime('%B %d, %Y') }}
+                </span>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_body %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    window.toggleDisplayNameEdit = function() {
+        const view = document.getElementById('displayNameView');
+        const form = document.getElementById('displayNameForm');
+
+        if (form.style.display === 'none') {
+            view.classList.add('hidden');
+            form.style.display = 'block';
+            form.querySelector('input').focus();
+            form.querySelector('input').value = "{{ user.display_name | string }}";
+        } else {
+            view.classList.remove('hidden');
+            form.style.display = 'none';
+        }
+    }
+});
+</script>
+{% endblock %}

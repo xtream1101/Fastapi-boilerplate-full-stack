@@ -1,0 +1,92 @@
+{% extends "auth/templates/_layouts/settings_base.html" %}
+{% set active_section = "api_keys" %}
+
+{% block settings_content %}
+<div class="rounded-lg p-6 shadow-sm" style="background-color: var(--bg-footer)">
+    <div class="border-b pb-4 mb-4" style="border-color: var(--border-color)">
+        <h2 class="text-lg font-semibold" style="color: var(--color-primary)">API Keys</h2>
+        <p class="text-sm opacity-70">Manage your API Keys</p>
+    </div>
+
+    <div class="space-y-6">
+        <!-- API Keys List -->
+        {% if api_keys %}
+            <div class="space-y-4">
+                {% for key in api_keys %}
+                    <div class="flex items-center justify-between p-4 rounded-lg transition-colors" style="background-color: var(--bg-main)">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="font-medium" style="color: var(--text-primary)">{{ key.name }}</span>
+                                <span class="text-xs px-2 py-0.5 rounded-full opacity-70" style="background-color: var(--bg-footer)">
+                                    {{ key.access_level.value|replace('_', ' ')|title }}
+                                </span>
+                            </div>
+                            <p class="text-xs opacity-70">
+                                Created:
+                                <span
+                                    data-timestamp="{{ key.created_at.isoformat() }}"
+                                    data-timestamp-format="MMMM D, YYYY h:mm A"
+                                >
+                                    {{ key.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                                </span>
+                            </p>
+                            <p class="text-xs opacity-70">
+                                Last used:
+                                {% if key.last_used %}
+                                <span
+                                    data-timestamp="{{ key.last_used.isoformat() }}"
+                                    data-timestamp-format="MMMM D, YYYY h:mm A"
+                                >
+                                    {{ key.last_used.strftime('%Y-%m-%d %H:%M:%S') }}
+                                </span>
+                                {% else %}
+                                Never
+                                {% endif %}
+                            </p>
+                        </div>
+                        <form action="{{ url_for('api_key.revoke.post', key_id=key.id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to revoke this API key?')">
+                            <button type="submit" class="btn-alert btn-sm hover:bg-red-600 transition-colors">
+                                Revoke
+                            </button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-sm text-center opacity-70">You haven't created any API keys yet.</p>
+        {% endif %}
+
+        <!-- Create a new api key -->
+        <div class="border-t pt-4" style="border-color: var(--border-color)">
+            <h3 class="text-base font-semibold" style="color: var(--color-primary)">Create API key</h3>
+            <p class="mt-1 text-sm opacity-70">Create a new API key to access and manage your snippets</p>
+            <div class="mt-4">
+                 <form action="{{ url_for('api_key.create.post') }}" method="POST" class="flex flex-col">
+                     <div class="space-y-4">
+                         <div>
+                             <label for="name" class="block text-sm font-medium" style="color: var(--text-primary)">Key Name</label>
+                             <input type="text" name="name" id="name" required
+                                class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                                style="--tw-ring-color: var(--color-primary); border-color: var(--border-color); background-color: var(--bg-main); color: var(--text-primary)">
+                         </div>
+                         <div>
+                             <label for="access_level" class="block text-sm font-medium" style="color: var(--text-primary)">Access Level</label>
+                             <select name="access_level" id="access_level" required
+                                class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                                style="--tw-ring-color: var(--color-primary); border-color: var(--border-color); background-color: var(--bg-main); color: var(--text-primary)">
+                                 <option value="read">Read Only</option>
+                                 <option value="read_write">Read & Write</option>
+                             </select>
+                         </div>
+                         <div class="flex justify-end">
+                             <button type="submit" class="btn-primary">
+                                 Create API Key
+                             </button>
+                         </div>
+                     </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
