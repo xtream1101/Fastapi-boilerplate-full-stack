@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}FastAPI Boilerplate{% endblock %}{% block title_suffix %}{% endblock %}</title>
+    <title>{% block title %}{{ page_title ~ " | " if page_title }}FastAPI Boilerplate{% endblock %}</title>
     <link href="{{ static_url(path='/dist/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    {% if user %}
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    {% endif %}
     <style>
         :root {
             color-scheme: light dark;
@@ -113,18 +116,60 @@
                             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
                         </svg>
                     </button>
+                    {% if user %}
+                    <div class="flex items-center space-x-4">
+                        <a href="{{ url_for('dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white flex items-center space-x-1">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                            </svg>
+                            <span>Dashboard</span>
+                        </a>
+                        <div class="relative" x-data="{ open: false }" @click.away="open = false">
+                            <button @click="open = !open" class="flex items-center space-x-2">
+                                <div class="size-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 font-medium">
+                                    {{ user.display_name[:1] }}
+                                </div>
+                            </button>
+
+                            <div x-show="open"
+                                x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="transform opacity-0 scale-95"
+                                x-transition:enter-end="transform opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave-start="transform opacity-100 scale-100"
+                                x-transition:leave-end="transform opacity-0 scale-95"
+                                class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 dark:ring-gray-700"
+                                style="display: none;">
+                                <div class="py-1">
+                                    <div class="px-4 py-2 text-sm">
+                                        <div class="font-medium text-gray-900 dark:text-gray-100">{{ user.display_name }}</div>
+                                        <div class="text-gray-500 dark:text-gray-400">{{ user.email }}</div>
+                                    </div>
+                                    <div class="border-t border-gray-100 dark:border-gray-700"></div>
+                                    <a href="{{ url_for('auth.account_settings') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Account Settings</a>
+                                    {% if user.is_admin %}
+                                    <a href="{{ url_for('auth.admin') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Admin Dashboard</a>
+                                    {% endif %}
+                                    <div class="border-t border-gray-100 dark:border-gray-700"></div>
+                                    <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">Sign Out</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
                     {% from "common/templates/_macros/nav_buttons.html" import render_nav_buttons with context %}
-                    {% block nav_buttons %}
                     {{ render_nav_buttons() }}
-                    {% endblock %}
+                    {% endif %}
                 </div>
             </div>
         </nav>
     </header>
 
-    <main>
-        {% include "common/templates/_components/flash_messages.html" %}
-        {% block content %}{% endblock %}
+    <main class="min-h-screen">
+        <div class="min-h-screen flex-grow {% if user %}pt-6{% endif %} px-4 sm:px-6 lg:px-8" style="background-color: var(--bg-main);">
+            {% include "common/templates/_components/flash_messages.html" %}
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
     <footer class="mt-auto border-t" style="background-color: var(--bg-footer); border-color: var(--border-color)">

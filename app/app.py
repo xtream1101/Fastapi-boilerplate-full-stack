@@ -16,8 +16,7 @@ from app.logger import init_logging
 from app.settings import settings
 
 app = FastAPI(
-    title="devscript",
-    summary="A code snippet manager",
+    title=settings.APP_NAME,
     docs_url=None,
     redoc_url=None,
 )

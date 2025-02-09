@@ -5,6 +5,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # Application Settings
+    APP_NAME: str = "FastAPI Boilerplate"
     VERSION: str = "0.1.0"
     ENV: Literal["dev", "staging", "prod"] = "dev"
     HOST: str = "http://localhost:8000"

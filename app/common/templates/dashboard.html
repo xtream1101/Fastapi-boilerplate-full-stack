@@ -1,8 +1,8 @@
-{% extends "common/templates/_layouts/base_logged_in.html" %}
+{% set page_title = "Dashboard" %}
 
-{% block title_suffix %} - Dashboard{% endblock %}
+{% extends "common/templates/_layouts/base.html" %}
 
-{% block main_content %}
+{% block content %}
 <div class="space-y-6">
     <!-- Welcome section -->
     <div class="shadow-sm rounded-lg p-6" style="background-color: var(--bg-footer)">

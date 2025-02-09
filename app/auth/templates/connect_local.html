@@ -1,10 +1,8 @@
-{% extends "common/templates/_layouts/base_logged_in.html" %}
+{% set page_title = "COnnect Local Account" %}
 
-{% block title_suffix %} - Connect Local Account{% endblock %}
+{% extends "common/templates/_layouts/base.html" %}
 
-{% block main_content %}
-
-
+{% block content %}
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8 p-8 rounded-lg shadow-sm" style="background-color: var(--bg-footer)">
         <div>
@@ -53,4 +51,4 @@
         </div>
     </div>
 </div>
-{% endblock main_content %}
+{% endblock content %}
