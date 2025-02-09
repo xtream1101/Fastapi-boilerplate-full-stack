@@ -7,7 +7,6 @@ from jinja2 import pass_context
 
 from app.auth.utils import AUTH_COOKIE, optional_current_user
 from app.common import utils
-from app.common.constants import SUPPORTED_LANG_FILENAMES, SUPPORTED_LANGUAGES
 from app.settings import settings
 
 
@@ -29,10 +28,6 @@ def app_context(request: Request) -> Dict[str, Any]:
         "user": user,
         "settings": settings,
         "active_route_name": active_route,
-        "supported_languages": {
-            "options": SUPPORTED_LANGUAGES,
-            "filenames": SUPPORTED_LANG_FILENAMES,
-        },
     }
 
 
@@ -108,12 +103,3 @@ def snippets_index_url(
 @pass_context
 def get_flashed_messages(context: dict) -> list:
     return utils.get_flashed_messages(context["request"])
-
-
-@jinja_global_function
-@pass_context
-def snippet_language_display(context: dict, language: str) -> str:
-    if language not in SUPPORTED_LANGUAGES.__members__:
-        return language
-
-    return SUPPORTED_LANGUAGES[language].value[0]

@@ -70,7 +70,7 @@ async def login_view(
 ):
     if user:
         return RedirectResponse(
-            url=request.url_for("index"), status_code=status.HTTP_303_SEE_OTHER
+            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
         )
 
     # Check if there are any users
@@ -122,7 +122,7 @@ async def local_login(
             ),
         )
         response = RedirectResponse(
-            url=request.url_for("index"), status_code=status.HTTP_303_SEE_OTHER
+            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
         )
         response.set_cookie(settings.COOKIE_NAME, access_token)
         return response
@@ -156,7 +156,7 @@ async def forgot_password_view(
     """Display the forgot password form."""
     if user:
         return RedirectResponse(
-            url=request.url_for("index"), status_code=status.HTTP_303_SEE_OTHER
+            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
         )
 
     return templates.TemplateResponse(
@@ -179,7 +179,7 @@ async def forgot_password(
     """Process forgot password request and send reset email."""
     if user:
         return RedirectResponse(
-            url=request.url_for("index"), status_code=status.HTTP_303_SEE_OTHER
+            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
         )
 
     email = email.lower().strip()
@@ -324,7 +324,7 @@ async def register_view(
 ):
     if user:
         return RedirectResponse(
-            url=request.url_for("index"), status_code=status.HTTP_303_SEE_OTHER
+            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
         )
 
     # Check if there are any users
@@ -533,7 +533,9 @@ async def resend_verification_view(
     Display the resend verification email page.
     """
     if user:
-        return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse(
+            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
+        )
     return templates.TemplateResponse(
         "auth/templates/resend_verification.html",
         {"request": request, "provider": provider, "email": email},

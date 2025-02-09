@@ -1,123 +1,216 @@
-{% from "common/templates/_macros/wordmark.html" import wordmark_svg %}
-
 <!DOCTYPE html>
-<html lang="en" class="flex flex-col min-h-full {{ 'lg:h-full lg:max-h-full' if lg_max_full_height }} {{ 'sm:h-full sm:max-h-full' if sm_max_full_height }}">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>{% block title %}{{ page_title ~ " | " if page_title }}devscript{% endblock %}</title>
-    <meta name="description" content="{% block description %}devscript - A platform to share and discover code snippets{% endblock %}">
-
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ static_url(path='/images/brand/light/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ static_url(path='/images/brand/light/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ static_url(path='/images/brand/light/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ static_url(path='/images/brand/light/site.webmanifest') }}">
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-
-    <!-- Force reload on back/forward navigation -->
-    <script>
-        // Reload the page when the user navigates back or forward
-        var perfEntries = performance.getEntriesByType("navigation");
-        if (perfEntries[0].type === "back_forward") {
-            location.reload();
+    <title>{% block title %}FastAPI Boilerplate{% endblock %}</title>
+    <link href="{{ static_url(path='/dist/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        :root {
+            color-scheme: light dark;
         }
-    </script>
 
-    <!-- Markdown Editor -->
-    <!-- https://github.com/nhn/tui.editor -->
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/theme/toastui-editor-dark.min.css" />
-    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+        :root, .light {
+            --color-primary: #6b7280;
+            --color-primary-dark: #4b5563;
+            --color-gray: #1e293b;
+            --color-accent: #4b5563;
+            --bg-main: #f8fafc;
+            --bg-header: rgba(255, 255, 255, 0.8);
+            --bg-footer: #ffffff;
+            --text-primary: #1e293b;
+            --border-color: #e2e8f0;
+        }
 
-    <!-- Tags  -->
-    <!-- https://github.com/yairEO/tagify  -->
-    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.jsdelivr.net/npm/@yaireo/dragsort"></script>
+        .dark {
+            --color-primary: #9ca3af;
+            --color-primary-dark: #6b7280;
+            --color-gray: #e2e8f0;
+            --color-accent: #6b7280;
+            --bg-main: #0f172a;
+            --bg-header: rgba(15, 23, 42, 0.8);
+            --bg-footer: #1e293b;
+            --text-primary: #f1f5f9;
+            --border-color: #334155;
+        }
 
-    <!-- Dropdowns -->
-    <!-- https://github.com/brianvoe/slim-select -->
-    <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
-    <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet"></link>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-primary);
+            background-color: var(--bg-main);
+        }
 
-    <!-- Datetime Formatting -->
-    <!-- https://github.com/iamkun/dayjs/ -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.13/dayjs.min.js" integrity="sha512-FwNWaxyfy2XlEINoSnZh1JQ5TRRtGow0D6XcmAWmYCRgvqOUTnzCxPc9uF35u5ZEpirk1uhlPVA19tflhvnW1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.13/plugin/relativeTime.min.js" integrity="sha512-MVzDPmm7QZ8PhEiqJXKz/zw2HJuv61waxb8XXuZMMs9b+an3LoqOqhOEt5Nq3LY1e4Ipbbd/e+AWgERdHlVgaA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
 
-    <!-- Styles -->
-    <link href="{{ static_url(path='/dist/app.css') }}" rel="stylesheet" />
+        .btn-primary:hover {
+            background-color: var(--color-primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--color-gray);
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f8fafc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-link {
+            color: var(--color-gray);
+            font-weight: 500;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .nav-link:hover {
+            color: var(--color-primary);
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
 </head>
-<body class="flex flex-col grow bg-stone-200 dark:bg-neutral-900 text-stone-900 dark:text-white {{ 'lg:h-full lg:max-h-full' if lg_max_full_height }} {{ 'sm:h-full sm:max-h-full' if sm_max_full_height }}">
-    <div class="flex flex-col flex-grow {{ 'lg:h-full lg:max-h-full' if lg_max_full_height }} {{ 'sm:h-full sm:max-h-full' if sm_max_full_height }}">
-        <div class="{{ 'sticky top-0 z-[90000]'  if not disable_sticky_header }} backdrop-blur bg-stone-200/20 dark:bg-stone-900/20  pt-2 px-2 md:pt-4 md:px-4 rounded-b-full">
-            <nav class="flex h-16 items-center justify-between w-full bg-yellow-950 rounded-full px-6 md:px-8 shadow-lg">
-                <div class="flex flex-row items-center justify-start space-x-4">
-                    <a href="{{ url_for('index') }}" class="flex items-center shrink-0 gap-1 text-white hover:text-yellow-500">
-                        {{ wordmark_svg("text-white h-5 w-auto mt-1")}}
-                    </a>
-                </div>
-                <div class="flex flex-row items-center justify-end space-x-2 md:space-x-4">
-                    {% if user %}
-                        <a href="{{ url_for('auth.account_settings') }}" class="rounded-md  text-yellow-400 hover:text-yellow-300 dark:text-yellow-600 dark:hover:text-yellow-500" title="Account Settings">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                                <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
-                            </svg>
+<body class="min-h-screen flex flex-col">
+    <header class="shadow-sm backdrop-blur-sm sticky top-0 z-50" style="background-color: var(--bg-header)">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center space-x-8">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="{{ url_for('index') }}" class="text-2xl font-bold bg-gradient-to-r from-primary-500 to-primary-700 bg-clip-text text-transparent">
+                            FastAPI
                         </a>
-                    {% else %}
-                        <a
-                            href="https://github.com/xtream1101/devscript"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="shrink-0 hidden sm:flex items-center gap-2 rounded-full px-4 py-2 text-base font-medium text-white hover:bg-yellow-900 transition-colors"
-                        >
-                            <svg class="size-5" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
-                            <span class="hidden sm:inline-block">
-                                <span class="hidden md:inline-block">View on&nbsp;</span>GitHub
-                            </span>
-                        </a>
-                        <a href="{{ url_for('auth.login') }}" class="shrink-0 btn-secondary--yellow">Login</a>
-                        <a href="{{ url_for('auth.register') }}" class="shrink-0 btn-primary">Sign up</a>
-                    {% endif %}
+                    </div>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="#features" class="nav-link">Features</a>
+                        <a href="#docs" class="nav-link">Documentation</a>
+                        <a href="#about" class="nav-link">About</a>
+                    </div>
                 </div>
-            </nav>
-        </div>
-
-        {% block main %}
-        <main class="flex flex-col flex-grow my-4 mx-4 md:my-4 md:mx-8 overflow-auto">
-            {% include "common/templates/_components/flash_messages.html" %}
-            {% block content %}{% endblock %}
-        </main>
-        {% endblock %}
-
-        <footer class="mt-auto py-2 border-t border-stone-300 dark:border-stone-800">
-          <div class="flex flex-row items-center justify-between mx-auto px-4">
-            <div class="flex justify-center items-center space-x-2 md:space-x-6 text-xs md:text-sm text-stone-500 dark:text-stone-600">
-              <a href="https://github.com/xtream1101/devscript" class="hover:text-yellow-950 dark:hover:text-yellow-50 transition-colors">GitHub</a>
-              <a href="https://github.com/xtream1101/devscript/blob/main/LICENSE" class="hover:text-yellow-950 dark:hover:text-yellow-50 transition-colors">License</a>
-              <a href="mailto:{{settings.SUPPORT_EMAIL}}" class="hover:text-yellow-950 dark:hover:text-yellow-50 transition-colors">Support</a>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <!-- Sun icon -->
+                        <svg class="w-5 h-5 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+                        </svg>
+                        <!-- Moon icon -->
+                        <svg class="w-5 h-5 block dark:hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                        </svg>
+                    </button>
+                    {% block nav_buttons %}
+                    <a href="{{ url_for('auth.register') }}" class="btn-secondary">Sign up</a>
+                    <a href="{{ url_for('auth.login') }}" class="btn-primary">Sign in</a>
+                    {% endblock %}
+                </div>
             </div>
-            <button id="theme-toggle" class="p-2 rounded-lg bg-stone-300 dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-950 transition-colors">
-              <svg data-dark-mode-only class="hidden w-5 h-5 text-stone-500" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-              </svg>
-              <svg data-light-mode-only class="hidden w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
-              </svg>
-            </button>
-          </div>
-        </footer>
-    </div>
+        </nav>
+    </header>
 
-    <script type="module" src="{{ static_url(path='/app.js') }}"></script>
-    {% block scripts %}{% endblock %}
+    <main>
+        {% include "common/templates/_components/flash_messages.html" %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="mt-auto border-t" style="background-color: var(--bg-footer); border-color: var(--border-color)">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-600 tracking-wider uppercase">Product</h3>
+                    <ul class="mt-4 space-y-3">
+                        <li><a href="#" class="nav-link text-sm">Features</a></li>
+                        <li><a href="#" class="nav-link text-sm">Documentation</a></li>
+                        <li><a href="#" class="nav-link text-sm">Changelog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-600 tracking-wider uppercase">Support</h3>
+                    <ul class="mt-4 space-y-3">
+                        <li><a href="#" class="nav-link text-sm">Help Center</a></li>
+                        <li><a href="#" class="nav-link text-sm">Community</a></li>
+                        <li><a href="#" class="nav-link text-sm">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-600 tracking-wider uppercase">Legal</h3>
+                    <ul class="mt-4 space-y-3">
+                        <li><a href="#" class="nav-link text-sm">Privacy</a></li>
+                        <li><a href="#" class="nav-link text-sm">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <p class="text-center text-gray-500 text-sm">© 2025 FastAPI Boilerplate. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_body %}{% endblock %}
+
+    <script>
+        // Theme handling
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                localStorage.theme = 'dark';
+            } else if (theme === 'light') {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                localStorage.theme = 'light';
+            } else {
+                localStorage.removeItem('theme');
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    html.classList.remove('light');
+                    html.classList.add('dark');
+                } else {
+                    html.classList.remove('dark');
+                    html.classList.add('light');
+                }
+            }
+        }
+
+        // Initialize theme
+        if (localStorage.theme === 'dark' || (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            setTheme('dark');
+        } else {
+            setTheme('light');
+        }
+
+        // Toggle theme button click handler
+        themeToggle.addEventListener('click', () => {
+            if (html.classList.contains('dark')) {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+        });
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.theme) {
+                setTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+    </script>
 </body>
 </html>
