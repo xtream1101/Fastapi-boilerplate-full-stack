@@ -15,6 +15,8 @@
 
 - Optional SSO/OIDC logins
 - Optional verify user by email as well as welcome emails (must have smtp server configured)
+- Option to disable registration
+    - if disabled, admins can manually invite users
 
 
 ## TODO's
