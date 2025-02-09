@@ -20,7 +20,16 @@
   }
 
   .form-input {
-    @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm;
+    @apply mt-1 block w-full rounded-md shadow-sm sm:text-sm;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-footer);
+    color: var(--text-primary);
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
   }
 
   .btn-primary {
@@ -72,8 +81,8 @@
     --ss-primary-color: theme('colors.emerald.800');
     --ss-font-color: theme('colors.stone.950');
     color-scheme: light dark;
-    --color-primary: #6b7280;
-    --color-primary-dark: #4b5563;
+    --color-primary: #2563eb;
+    --color-primary-dark: #1d4ed8;
     --color-gray: #1e293b;
     --color-accent: #4b5563;
     --bg-main: #f8fafc;
@@ -86,8 +95,8 @@
   .dark:root  {
     --ss-primary-color: theme('colors.emerald.950');
     --ss-font-color: theme('colors.white');
-    --color-primary: #9ca3af;
-    --color-primary-dark: #6b7280;
+    --color-primary: #6366f1;
+    --color-primary-dark: #4f46e5;
     --color-gray: #e2e8f0;
     --color-accent: #6b7280;
     --bg-main: #0f172a;
