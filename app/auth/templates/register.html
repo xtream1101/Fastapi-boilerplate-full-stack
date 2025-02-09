@@ -14,7 +14,13 @@
             </p>
         </div>
 
-        {% if is_first_user %}
+        {% if invitation %}
+        <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <p class="text-sm text-blue-800">
+                You've been invited to create an account. Please use the email address associated with your invitation.
+            </p>
+        </div>
+        {% elif is_first_user %}
         <div class="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
             <p class="text-sm text-yellow-800">
                 You are the first user registering. You will automatically become the admin user.
@@ -28,7 +34,7 @@
                     <label for="email" class="block text-sm font-medium" style="color: var(--text-primary)">
                         Email address
                     </label>
-                    <input type="email" name="email" id="email" required
+                    <input type="email" name="email" id="email" required {% if invited_email %}value="{{ invited_email }}" readonly{% endif %}
                         class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50"
                         style="--tw-ring-color: var(--color-primary); border-color: var(--border-color); background-color: var(--bg-main); color: var(--text-primary)">
                 </div>
@@ -49,6 +55,10 @@
                         style="--tw-ring-color: var(--color-primary); border-color: var(--border-color); background-color: var(--bg-main); color: var(--text-primary)">
                 </div>
             </div>
+
+            {% if invitation %}
+            <input type="hidden" name="token" value="{{ invitation.token }}">
+            {% endif %}
 
             <div>
                 <button type="submit" class="btn-primary w-full">

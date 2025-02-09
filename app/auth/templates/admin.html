@@ -4,6 +4,89 @@
 
 {% block content %}
 <div class="max-w-7xl mx-auto w-full space-y-6">
+    {% if settings.DISABLE_REGISTRATION %}
+    <div class="rounded-lg shadow-sm overflow-hidden" style="background-color: var(--bg-footer)">
+        <div class="p-6">
+            <h3 class="text-lg font-semibold" style="color: var(--color-primary)">User Invitations</h3>
+            <p class="mt-1 text-sm opacity-70">Invite new users to join</p>
+        </div>
+        <div class="border-t p-6" style="border-color: var(--border-color)">
+            <form method="POST" action="{{ url_for('auth.invite_user') }}" class="flex gap-4 items-end">
+                <div class="flex-1">
+                    <label for="email" class="block text-sm font-medium opacity-70 mb-1">Email Address</label>
+                    <input type="email" name="email" id="email" required
+                        class="w-full px-3 py-2 border rounded-md text-sm"
+                        style="background-color: var(--bg-main); border-color: var(--border-color)"
+                        placeholder="user@example.com">
+                </div>
+                <button type="submit"
+                    class="px-4 py-2 text-sm font-medium rounded-md text-white"
+                    style="background-color: var(--color-primary)">
+                    Send Invitation
+                </button>
+            </form>
+
+            {% if invitations %}
+            <div class="mt-6">
+                <h4 class="text-sm font-medium opacity-70 mb-3">Pending Invitations</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y" style="border-color: var(--border-color)">
+                        <thead>
+                            <tr>
+                                <th class="px-3 py-2 text-left text-xs font-medium opacity-70">Email</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium opacity-70">Sent</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium opacity-70">Status</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium opacity-70">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y" style="border-color: var(--border-color)">
+                            {% for invite in invitations %}
+                            <tr>
+                                <td class="px-3 py-2 text-sm">{{ invite.email }}</td>
+                                <td class="px-3 py-2 text-sm opacity-70">{{ invite.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td class="px-3 py-2 text-sm">
+                                    {% if invite.is_expired %}
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                        Expired
+                                    </span>
+                                    {% elif invite.is_used %}
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Used
+                                    </span>
+                                    {% else %}
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        Pending
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-3 py-2 text-sm">
+                                    {% if not invite.is_used and not invite.is_expired %}
+                                    <button onclick="navigator.clipboard.writeText('{{ invite.get_invitation_link(request) }}')"
+                                        class="text-sm hover:opacity-80 transition-colors"
+                                        style="color: var(--color-primary)">
+                                        Copy Link
+                                    </button>
+                                    {% if not invite.email_sent and settings.SMTP_HOST %}
+                                    <form method="POST" action="{{ url_for('auth.resend_invitation', invitation_id=invite.id) }}" class="inline ml-4">
+                                        <button type="submit"
+                                            class="text-sm hover:opacity-80 transition-colors"
+                                            style="color: var(--color-primary)">
+                                            Resend Email
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
     <div class="rounded-lg shadow-sm overflow-hidden" style="background-color: var(--bg-footer)">
         <div class="p-6">
             <h3 class="text-lg font-semibold" style="color: var(--color-primary)">User Management</h3>

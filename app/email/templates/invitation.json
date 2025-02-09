@@ -1,0 +1,4 @@
+{
+    "subject": "You've been invited to join {{ site_name }}",
+    "preview_text": "You've been invited to create an account on {{ site_name }}."
+}
