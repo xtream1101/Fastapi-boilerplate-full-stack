@@ -19,7 +19,6 @@
 
 ## TODO's
 
-- Option to disable user registration
 - Better admin interface
 - Add docs server using mkdocs
 - Add precommit hooks
