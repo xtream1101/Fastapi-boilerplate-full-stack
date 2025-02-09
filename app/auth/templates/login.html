@@ -60,6 +60,7 @@
         {% include "auth/templates/_components/sso_providers.html" %}
         {% endif %}
 
+        {% if not registration_disabled %}
         <div class="text-center mt-6">
             <p class="text-sm" style="color: var(--text-primary)">
                 Don't have an account?
@@ -68,6 +69,7 @@
                 </a>
             </p>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

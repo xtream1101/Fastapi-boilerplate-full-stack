@@ -22,12 +22,16 @@ def app_context(request: Request) -> Dict[str, Any]:
         except Exception:
             pass
 
+    # Get registration disabled status
+    registration_disabled = settings.DISABLE_REGISTRATION
+
     return {
         # Used on all pages
         "request": request,
         "user": user,
         "settings": settings,
         "active_route_name": active_route,
+        "registration_disabled": registration_disabled,
     }
 
 

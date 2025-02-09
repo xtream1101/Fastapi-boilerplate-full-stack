@@ -113,9 +113,9 @@
                             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
                         </svg>
                     </button>
+                    {% from "common/templates/_macros/nav_buttons.html" import render_nav_buttons with context %}
                     {% block nav_buttons %}
-                    <a href="{{ url_for('auth.register') }}" class="btn-secondary">Sign up</a>
-                    <a href="{{ url_for('auth.login') }}" class="btn-primary">Sign in</a>
+                    {{ render_nav_buttons() }}
                     {% endblock %}
                 </div>
             </div>

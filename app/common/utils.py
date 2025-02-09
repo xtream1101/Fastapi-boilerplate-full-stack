@@ -4,6 +4,8 @@ from typing import Any, Awaitable, Dict, List, Literal, Optional, TypeVar
 
 from fastapi import Request
 
+from app.settings import settings
+
 T = TypeVar("T")
 
 
@@ -81,3 +83,8 @@ def get_key_from_options(my_dict: dict, key_options: List[str]) -> Any:
         if key in my_dict:
             return my_dict[key]
     return None
+
+
+async def registration_disabled_context(request: Request) -> bool:
+    """Context dependency that provides the registration disabled status."""
+    return settings.DISABLE_REGISTRATION
