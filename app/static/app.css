@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --ss-primary-color: theme('colors.emerald.800');
+    --ss-font-color: theme('colors.stone.950');
+  }
+
+  .dark:root  {
+    --ss-primary-color: theme('colors.emerald.950');
+    --ss-font-color: theme('colors.white');
+  }
+
+  html {
+    font-family: "Outfit", "Inter var", "Inter", "Arial", sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}

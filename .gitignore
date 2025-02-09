@@ -1,0 +1,23 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+pytestdebug.log
+
+
+# Virtual environments
+.venv
+
+# Project files
+*.db
+*.env
+
+# NPM files
+node_modules/
+
+# Secrets management
+.env
+.infisical.json

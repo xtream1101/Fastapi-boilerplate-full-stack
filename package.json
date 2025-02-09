@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "watch-styles": "npx tailwindcss -i ./app/static/app.css -o ./app/static/dist/app.css --watch",
+    "build-styles": "npx tailwindcss -i ./app/static/app.css -o ./app/static/dist/app.css"
+  },
+  "dependencies": {
+    "tailwindcss": "^3.4.17"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15"
+  }
+}

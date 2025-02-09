@@ -1,0 +1,31 @@
+{% extends "common/templates/_layouts/base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-sky-50 dark:bg-stone-800 rounded-xl">
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 px-2 md:px-6 rounded-t-xl bg-gradient-to-b from-amber-50 to-sky-50 dark:from-emerald-950 dark:to-stone-800">
+        <div class="container mx-auto text-center">
+            <!-- Hero Logo -->
+            <div class="flex justify-center mb-12">
+                <div class="flex items-center gap-3">
+                    {{ wordmark_svg(" dark:text-emerald-50 h-9 md:h-12 w-auto")}}
+                </div>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-bold  dark:text-emerald-50 mb-6">Your Code Snippets,<br>Organized and Accessible</h1>
+            <p class="text-lg md:text-xl mb-12 max-w-2xl mx-auto">
+                Save, organize, and share your most-used code snippets. Stop rewriting the same code over and over - keep your programming wisdom at your fingertips.
+            </p>
+            <div class="flex flex-wrap items-center justify-center gap-2 md:gap-4 mb-12">
+                <a href="{{ url_for('auth.register') }}" class="flex flex-row items-center justify-center btn-primary btn-lg">
+                    Get Started
+                </a>
+            </div>
+            <!-- Hero Screenshot -->
+            <div class="max-w-5xl mx-auto bg-white dark:bg-stone-950 rounded-xl shadow-xl overflow-hidden border-4 border-emerald-950">
+                <img src="{{ static_url('images/homepage/hero.png') }}" alt="Snippet Manager Dashboard" class="w-full" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1200 600\' class=\'w-full bg-yellow-50\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23fef3c7\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-family=\'monospace\' font-size=\'24\' fill=\'%23064e3b\' text-anchor=\'middle\' alignment-baseline=\'middle\'%3EHero Screenshot Placeholder%3C/text%3E%3C/svg%3E'">
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}

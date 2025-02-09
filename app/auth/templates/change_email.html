@@ -1,0 +1,38 @@
+{% set page_title = "Change Email" %}
+
+{% extends "common/templates/_layouts/base.html" %}
+{% from "common/templates/_macros/wordmark.html" import wordmark_svg %}
+
+{% block content %}
+<div class="container mx-auto pb-16">
+    <div class="max-w-2xl mx-auto bg-white dark:bg-stone-950 rounded-xl shadow-xl p-8">
+
+        <h1 class="text-2xl font-semibold mb-6 text-center">
+            Change Email Address
+        </h1>
+
+        <p class="text-sm text-stone-500 text-center mb-8">
+            We'll send you a confirmation email to verify your new email address.
+        </p>
+
+        <form action="{{ url_for('auth.change_email.post') }}" method="POST" class="space-y-4">
+            <div>
+                <label for="new_email" class="block text-sm font-medium">New Email Address</label>
+                <input type="email" name="new_email" id="new_email" required class="form-input">
+            </div>
+
+            <div>
+                <button type="submit" class="w-full btn-primary">
+                    Change Email
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-4 text-center">
+            <a href="{{ url_for('auth.account_settings') }}" class="text-sm font-medium text-yellow-600 hover:text-yellow-500">
+                Back to Account Settings
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
