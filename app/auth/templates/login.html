@@ -30,9 +30,11 @@
                         <label for="password" class="block text-sm font-medium" style="color: var(--text-primary)">
                             Password
                         </label>
+                        {% if is_smtp_configured() %}
                         <a href="{{ url_for('auth.forgot_password') }}" class="text-sm" style="color: var(--color-primary)">
                             Forgot password?
                         </a>
+                        {% endif %}
                     </div>
                     <input type="password" name="password" id="password" required
                         class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50"
@@ -60,7 +62,7 @@
         {% include "auth/templates/_components/sso_providers.html" %}
         {% endif %}
 
-        {% if not registration_disabled %}
+        {% if not settings.DISABLE_REGISTRATION %}
         <div class="text-center mt-6">
             <p class="text-sm" style="color: var(--text-primary)">
                 Don't have an account?

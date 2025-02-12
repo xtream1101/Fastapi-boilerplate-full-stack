@@ -35,6 +35,7 @@ from app.common.exceptions import (
 )
 from app.common.templates import templates
 from app.common.utils import flash
+from app.email.config import is_smtp_configured
 from app.email.send import send_password_reset_email
 from app.settings import settings
 
@@ -88,7 +89,7 @@ async def login_view(
         "auth/templates/login.html",
         {
             "list_of_sso_providers": list_of_sso_providers,
-            "registration_disabled": settings.DISABLE_REGISTRATION,
+            "is_smtp_configured": is_smtp_configured,
         },
     )
 
@@ -342,6 +343,14 @@ async def forgot_password_view(
             url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
         )
 
+    if not is_smtp_configured():
+        flash(
+            request, "Password reset is not available when email is disabled", "error"
+        )
+        return RedirectResponse(
+            url=request.url_for("auth.login"), status_code=status.HTTP_303_SEE_OTHER
+        )
+
     return templates.TemplateResponse(
         request,
         "auth/templates/forgot_password.html",
@@ -360,6 +369,13 @@ async def forgot_password(
     session: AsyncSession = Depends(get_async_session),
 ):
     """Process forgot password request and send reset email."""
+    if not is_smtp_configured():
+        flash(
+            request, "Password reset is not available when email is disabled", "error"
+        )
+        return RedirectResponse(
+            url=request.url_for("auth.login"), status_code=status.HTTP_303_SEE_OTHER
+        )
     if user:
         return RedirectResponse(
             url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
