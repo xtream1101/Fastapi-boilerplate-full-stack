@@ -14,7 +14,7 @@ def flash(
     title: str | None = None,
     placement: Literal["inline", "notification"] = "inline",
     is_dismissible: bool = True,
-    format: Literal["default", "new_api_key"] = "default",
+    format: Literal["default", "new_api_key", "admin_password_reset_link"] = "default",
     **kwargs,
 ) -> None:
     """
