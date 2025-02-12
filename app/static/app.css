@@ -65,6 +65,18 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
+  .btn-alert {
+    @apply bg-red-600 text-white px-5 py-2.5 rounded-lg font-medium;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .btn-alert:hover {
+    @apply bg-red-700;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
   .nav-link {
     color: var(--color-gray);
     font-weight: 500;

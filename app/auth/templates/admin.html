@@ -62,17 +62,14 @@
                                 <td class="px-3 py-2 text-sm">
                                     {% if not invite.is_used and not invite.is_expired %}
                                     <div class="flex items-center gap-3">
-                                        <button onclick="navigator.clipboard.writeText('{{ invite.get_invitation_link(request) }}')"
-                                            class="text-sm px-2 py-1 rounded hover:bg-opacity-10 hover:bg-primary transition-colors"
-                                            style="color: var(--color-primary)">
+                                        <input type="hidden" id="invite-link-{{ invite.id }}" value="{{ invite.get_invitation_link(request) }}">
+                                        <button data-copy-to-cliboard="invite-link-{{ invite.id }}" class="btn-primary btn-sm">
                                             Copy Link
                                         </button>
                                         {% if not invite.email_sent and settings.SMTP_HOST %}
                                         <div class="h-4 w-px opacity-20" style="background-color: var(--color-primary)"></div>
                                         <form method="POST" action="{{ url_for('auth.resend_invitation', invitation_id=invite.id) }}" class="inline">
-                                            <button type="submit"
-                                                class="text-sm px-2 py-1 rounded hover:bg-opacity-10 hover:bg-primary transition-colors"
-                                                style="color: var(--color-primary)">
+                                            <button type="submit" class="btn-primary btn-sm">
                                                 Resend Email
                                             </button>
                                         </form>
@@ -155,8 +152,7 @@
                                 {% endif %}
                                 <div class="h-4 w-px opacity-20" style="background-color: var(--color-primary)"></div>
                                 <form method="POST" action="{{ url_for('auth.delete_user', user_id=user.id) }}" class="inline">
-                                    <button type="submit" style="color: var(--color-accent-red)"
-                                        class="px-2 py-1 rounded hover:bg-red-500 hover:bg-opacity-10 transition-colors font-medium"
+                                    <button type="submit" class="btn-alert"
                                         onclick="return confirm('Are you sure you want to delete this user?')">
                                         Delete
                                     </button>
