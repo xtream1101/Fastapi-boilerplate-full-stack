@@ -178,7 +178,7 @@ class Invitation(Base):
 
 
 class PasswordReset(Base):
-    __tablename__ = "password_resets"
+    __tablename__ = "password_reset"
 
     id: Mapped[uuid.UUID] = mapped_column(
         sa.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
@@ -215,7 +215,7 @@ class PasswordReset(Base):
 
 
 class APIKey(Base):
-    __tablename__ = "api_keys"
+    __tablename__ = "api_key"
 
     id: Mapped[uuid.UUID] = mapped_column(
         sa.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
