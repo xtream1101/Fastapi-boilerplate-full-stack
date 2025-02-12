@@ -3,14 +3,13 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
 from fastapi.responses import RedirectResponse
-from jwt.exceptions import InvalidTokenError
 from loguru import logger
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.auth.constants import LOCAL_PROVIDER
-from app.auth.models import Invitation, Provider, User
+from app.auth.models import Invitation, PasswordReset, Provider, User
 from app.auth.providers.views import providers as list_of_sso_providers
 from app.auth.serializers import (
     TokenDataSerializer,
@@ -21,7 +20,6 @@ from app.auth.utils import (
     add_user,
     authenticate_user,
     create_token,
-    get_token_payload,
     optional_current_user,
     verify_and_get_password_hash,
 )
@@ -287,7 +285,7 @@ async def local_register(
         user_signup = UserSignUpSerializer(
             email=email, password=password, confirm_password=confirm_password
         )
-        user = await add_user(
+        _ = await add_user(
             session,
             user_signup,
             LOCAL_PROVIDER,
@@ -403,20 +401,31 @@ async def forgot_password(
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
-    # Generate reset token
-    reset_token = await create_token(
-        TokenDataSerializer(
-            user_id=provider.user.id,
-            email=provider.email,
-            provider_name=provider.name,
-            token_type="reset",
-        ),
-        expires_delta=timedelta(seconds=settings.PASSWORD_RESET_LINK_EXPIRATION),
+    # Invalidate any existing active reset links for this user
+    query = select(PasswordReset).filter(
+        PasswordReset.user_id == provider.user.id,
+        PasswordReset.expires_at > datetime.now(timezone.utc),
+        PasswordReset.used_at.is_(None),
     )
+    result = await session.execute(query)
+    existing_resets = result.scalars().all()
 
-    # Send reset email
+    # Mark existing reset links as used
+    for reset in existing_resets:
+        reset.used_at = datetime.now(timezone.utc)
+
+    # Create new password reset record
+    password_reset = PasswordReset(
+        user_id=provider.user.id,
+        expires_at=datetime.now(timezone.utc)
+        + timedelta(seconds=settings.PASSWORD_RESET_LINK_EXPIRATION),
+    )
+    session.add(password_reset)
+    await session.commit()
+
+    # Send reset email with token
     try:
-        await send_password_reset_email(email, reset_token)
+        await send_password_reset_email(email, password_reset.token)
     except Exception:
         logger.exception("Error sending password reset email")
         flash(request, "Failed to send password reset email", "error")
@@ -439,11 +448,36 @@ async def forgot_password(
 @router.get(
     "/reset-password/{token}", name="auth.reset_password", summary="Reset password form"
 )
-async def reset_password_view(request: Request, token: str):
+async def reset_password_view(
+    request: Request,
+    token: str,
+    user: Optional[User] = Depends(optional_current_user),
+    session: AsyncSession = Depends(get_async_session),
+):
     """Display the reset password form."""
+    if user:
+        return RedirectResponse(
+            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
+        )
+
+    # Check if reset token exists and is valid
+    query = select(PasswordReset).filter(
+        PasswordReset.token == token,
+        PasswordReset.expires_at > datetime.now(timezone.utc),
+        PasswordReset.used_at.is_(None),
+    )
     try:
-        await get_token_payload(token, "reset")
-    except InvalidTokenError:
+        result = await session.execute(query)
+        password_reset = result.scalar_one_or_none()
+    except Exception:
+        logger.exception("Error checking reset token")
+        flash(request, "Invalid reset link. Please try again.", "error")
+        return RedirectResponse(
+            url=request.url_for("auth.forgot_password"),
+            status_code=status.HTTP_303_SEE_OTHER,
+        )
+
+    if not password_reset:
         flash(request, "Invalid or expired reset link. Please try again.", "error")
         return RedirectResponse(
             url=request.url_for("auth.forgot_password"),
@@ -467,8 +501,14 @@ async def reset_password(
     password: str = Form(...),
     confirm_password: str = Form(...),
     session: AsyncSession = Depends(get_async_session),
+    user: Optional[User] = Depends(optional_current_user),
 ):
     """Process password reset request."""
+    if user:
+        return RedirectResponse(
+            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
+        )
+
     if password != confirm_password:
         flash(request, "Passwords do not match", "error")
         return RedirectResponse(
@@ -476,19 +516,42 @@ async def reset_password(
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
+    # Get password reset record
+    query = select(PasswordReset).filter(
+        PasswordReset.token == token,
+        PasswordReset.expires_at > datetime.now(timezone.utc),
+        PasswordReset.used_at.is_(None),
+    )
     try:
-        token_data = await get_token_payload(token, "reset")
-    except InvalidTokenError:
+        result = await session.execute(query)
+        password_reset = result.scalar_one_or_none()
+    except Exception:
+        logger.exception("Error checking reset token")
+        flash(request, "Invalid reset link. Please try again.", "error")
+        return RedirectResponse(
+            url=request.url_for("auth.forgot_password"),
+            status_code=status.HTTP_303_SEE_OTHER,
+        )
+
+    if not password_reset:
         flash(request, "Invalid or expired reset link. Please try again.", "error")
         return RedirectResponse(
             url=request.url_for("auth.forgot_password"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
-    # Update the user's password
-    query = select(User).filter(User.id == token_data.user_id)
-    result = await session.execute(query)
-    user = result.scalar_one_or_none()
+    # Get the user
+    query = select(User).filter(User.id == password_reset.user_id)
+    try:
+        result = await session.execute(query)
+        user = result.scalar_one_or_none()
+    except Exception:
+        logger.exception("Error getting user")
+        flash(request, "Invalid reset link. Please try again.", "error")
+        return RedirectResponse(
+            url=request.url_for("auth.forgot_password"),
+            status_code=status.HTTP_303_SEE_OTHER,
+        )
 
     if not user:
         flash(request, "Invalid reset link. Please try again.", "error")
@@ -497,8 +560,10 @@ async def reset_password(
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
-    user.password = await verify_and_get_password_hash(password)
+    # Update password and mark reset token as used
     try:
+        user.password = await verify_and_get_password_hash(password)
+        password_reset.used_at = datetime.now(timezone.utc)
         await session.commit()
     except Exception:
         logger.exception("Error resetting password")

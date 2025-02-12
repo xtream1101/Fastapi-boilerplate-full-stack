@@ -177,6 +177,43 @@ class Invitation(Base):
         return str(request.url_for("auth.register")) + f"?token={self.token}"
 
 
+class PasswordReset(Base):
+    __tablename__ = "password_resets"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        sa.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    token: Mapped[str] = mapped_column(
+        sa.String, nullable=False, unique=True, default=lambda: token_urlsafe(32)
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        sa.UUID(as_uuid=True),
+        sa.ForeignKey("user.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        sa.DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+    expires_at: Mapped[datetime] = mapped_column(
+        sa.DateTime(timezone=True),
+        nullable=False,
+    )
+    used_at: Mapped[datetime] = mapped_column(
+        sa.DateTime(timezone=True),
+        nullable=True,
+    )
+
+    @property
+    def is_expired(self) -> bool:
+        return datetime.now(timezone.utc) > self.expires_at
+
+    @property
+    def is_used(self) -> bool:
+        return self.used_at is not None
+
+
 class APIKey(Base):
     __tablename__ = "api_keys"
 

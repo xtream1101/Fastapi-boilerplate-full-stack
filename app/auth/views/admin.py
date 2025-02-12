@@ -1,12 +1,14 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, Form, Request, status
 from fastapi.responses import RedirectResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
-from app.auth.models import Invitation, User
+from app.auth.constants import LOCAL_PROVIDER
+from app.auth.models import Invitation, PasswordReset, User
 from app.auth.utils import admin_required, current_user
 from app.common.db import get_async_session
 from app.common.templates import templates
@@ -15,6 +17,83 @@ from app.email.send import send_invitation_email
 from app.settings import settings
 
 router = APIRouter(tags=["Admin"], include_in_schema=False)
+
+
+@router.post("/admin/users/{user_id}/reset-password", name="auth.admin_reset_password")
+@admin_required
+async def admin_reset_password(
+    request: Request,
+    user_id: uuid.UUID,
+    user: User = Depends(current_user),
+    session: AsyncSession = Depends(get_async_session),
+):
+    """Generate a password reset link for a user."""
+    if user.id == user_id:
+        flash(request, "Cannot reset your own password this way", "error")
+        return RedirectResponse(
+            url=request.url_for("auth.admin"),
+            status_code=status.HTTP_303_SEE_OTHER,
+        )
+
+    # Get user with their providers
+    query = (
+        select(User).filter(User.id == user_id).options(selectinload(User.providers))
+    )
+    result = await session.execute(query)
+    target_user = result.scalar_one_or_none()
+
+    if not target_user:
+        flash(request, "User not found", "error")
+        return RedirectResponse(
+            url=request.url_for("auth.admin"),
+            status_code=status.HTTP_303_SEE_OTHER,
+        )
+
+    # Check if user has a local provider
+    has_local_provider = any(p.name == LOCAL_PROVIDER for p in target_user.providers)
+    if not has_local_provider:
+        flash(request, "User does not have a password-based login", "error")
+        return RedirectResponse(
+            url=request.url_for("auth.admin"),
+            status_code=status.HTTP_303_SEE_OTHER,
+        )
+
+    # Invalidate any existing active reset links for this user
+    query = select(PasswordReset).filter(
+        PasswordReset.user_id == target_user.id,
+        PasswordReset.expires_at > datetime.now(timezone.utc),
+        PasswordReset.used_at.is_(None),
+    )
+    result = await session.execute(query)
+    existing_resets = result.scalars().all()
+
+    # Mark existing reset links as used
+    for reset in existing_resets:
+        reset.used_at = datetime.now(timezone.utc)
+
+    # Create new password reset record
+    password_reset = PasswordReset(
+        user_id=target_user.id,
+        expires_at=datetime.now(timezone.utc)
+        + timedelta(seconds=settings.PASSWORD_RESET_LINK_EXPIRATION),
+    )
+    session.add(password_reset)
+    await session.commit()
+
+    # Get the reset URL
+    reset_url = str(request.url_for("auth.reset_password", token=password_reset.token))
+
+    flash(
+        request,
+        "Password reset link created successfully",
+        level="success",
+        format="admin_password_reset_link",
+        reset_url=reset_url,
+    )
+    return RedirectResponse(
+        url=request.url_for("auth.admin"),
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
 
 
 @router.post("/admin/invite", name="auth.invite_user")
@@ -157,7 +236,11 @@ async def admin_view(
     session: AsyncSession = Depends(get_async_session),
 ):
     """Admin page for user management."""
-    query = select(User).order_by(User.registered_at.desc())
+    query = (
+        select(User)
+        .options(selectinload(User.providers))
+        .order_by(User.registered_at.desc())
+    )
     result = await session.execute(query)
     users = result.scalars().all()
 
