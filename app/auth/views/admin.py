@@ -310,6 +310,36 @@ async def toggle_user_ban(
     )
 
 
+@router.post("/admin/invitations/{invitation_id}/delete", name="auth.delete_invitation")
+@admin_required
+async def delete_invitation(
+    request: Request,
+    invitation_id: uuid.UUID,
+    user: User = Depends(current_user),
+    session: AsyncSession = Depends(get_async_session),
+):
+    """Delete an invitation."""
+    query = select(Invitation).filter(Invitation.id == invitation_id)
+    result = await session.execute(query)
+    invitation = result.scalar_one_or_none()
+
+    if not invitation:
+        flash(request, "Invitation not found", "error")
+        return RedirectResponse(
+            url=request.url_for("auth.admin"),
+            status_code=status.HTTP_303_SEE_OTHER,
+        )
+
+    await session.delete(invitation)
+    await session.commit()
+
+    flash(request, "Invitation deleted successfully", "success")
+    return RedirectResponse(
+        url=request.url_for("auth.admin"),
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
+
+
 @router.post("/admin/users/{user_id}/delete", name="auth.delete_user")
 @admin_required
 async def delete_user(
