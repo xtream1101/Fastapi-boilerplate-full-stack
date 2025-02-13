@@ -261,7 +261,7 @@ async def admin_view(
     return templates.TemplateResponse(
         request,
         "auth/templates/admin.html",
-        {"users": users, "invitations": invitations, "settings": settings},
+        {"users": users, "invitations": invitations},
     )
 
 
