@@ -78,7 +78,7 @@
       "props": {
         "height": 32,
         "url": "http://127.0.0.1:8000/static/images/brand/dark/wordmark.png",
-        "alt": "devscript",
+        "alt": "{{ site_name }}",
         "linkHref": "http://127.0.0.1:8000/",
         "contentAlignment": "middle"
       }

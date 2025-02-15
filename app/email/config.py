@@ -51,6 +51,7 @@ def _create_message(
         "base_url": settings.HOST,
         "subject": subject,
         "show_login_btn": True,
+        "site_name": settings.APP_NAME,
         **template_vars,
     }
     message = MessageSchema(

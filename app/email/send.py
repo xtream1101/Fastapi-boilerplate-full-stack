@@ -11,23 +11,32 @@ from app.settings import settings
 from .config import send_email_async
 
 
-async def send_invitation_email(email: str, invitation_link: str):
+async def send_invitation_email(
+    email: str, invitation_link: str, subject_prefix: str = ""
+):
     """Send an invitation email to the user"""
+    if subject_prefix is None:
+        subject_prefix = ""
+
     await send_email_async(
         template_name="invitation.html",
         recipients=[email],
-        subject="You've been invited to join devscript",
+        subject=f"{subject_prefix}You've been invited to join {settings.APP_NAME}",
         template_vars={
             "invitation_link": invitation_link,
-            "site_name": "devscript",
             "show_login_btn": False,
         },
     )
 
 
-async def send_password_reset_email(email: str, reset_token: str):
+async def send_password_reset_email(
+    email: str, reset_token: str, subject_prefix: str = ""
+):
     """Send a password reset email to the user"""
     from app.app import app
+
+    if subject_prefix is None:
+        subject_prefix = ""
 
     reset_url = settings.HOST + str(
         app.url_path_for("auth.reset_password", token=reset_token)
@@ -35,7 +44,7 @@ async def send_password_reset_email(email: str, reset_token: str):
     await send_email_async(
         template_name="reset_password.html",
         recipients=[email],
-        subject="Reset your devscript password",
+        subject=f"{subject_prefix}Reset your {settings.APP_NAME} password",
         template_vars={
             "reset_url": reset_url,
             "expiration_time": format_timespan(settings.PASSWORD_RESET_LINK_EXPIRATION),
@@ -44,15 +53,18 @@ async def send_password_reset_email(email: str, reset_token: str):
     )
 
 
-async def send_welcome_email(email: str):
+async def send_welcome_email(email: str, subject_prefix: str = ""):
     """Send a welcome email to the user"""
     from app.app import app
+
+    if subject_prefix is None:
+        subject_prefix = ""
 
     welcome_url = settings.HOST + str(app.url_path_for("auth.login"))
     await send_email_async(
         template_name="welcome.html",
         recipients=[email],
-        subject="Welcome to devscript!",
+        subject=f"{subject_prefix}Welcome to {settings.APP_NAME}!",
         template_vars={
             "welcome_url": welcome_url,
             "show_login_btn": True,
@@ -61,12 +73,18 @@ async def send_welcome_email(email: str):
 
 
 async def send_verification_email(
-    email: str, validation_token: str, from_change_email: str = None
+    email: str,
+    validation_token: str,
+    from_change_email: str = None,
+    subject_prefix: str = "",
 ):
     """
     Send a verification email to the user
     """
     from app.app import app
+
+    if subject_prefix is None:
+        subject_prefix = ""
 
     verify_url = (
         settings.HOST
@@ -76,7 +94,7 @@ async def send_verification_email(
     await send_email_async(
         template_name="verify.html",
         recipients=[email],
-        subject="Verify your devscript email address",
+        subject=f"{subject_prefix}Verify your {settings.APP_NAME} email address",
         template_vars={
             "verify_url": verify_url,
             "expiration_time": format_timespan(settings.VALIDATION_LINK_EXPIRATION),
@@ -89,7 +107,7 @@ async def send_verification_email(
         await send_email_async(
             template_name="verify_old_email.html",
             recipients=[from_change_email],
-            subject="Your devscript email address was changed",
+            subject=f"{subject_prefix}Your {settings.APP_NAME} email address was changed",
             template_vars={
                 "new_email": email,
             },
@@ -148,12 +166,6 @@ async def _send_verify_or_welcome_email(
                 validation_token=validation_token,
             )
         elif incoming_data.is_verified and is_only_provider:
-            print("Sending welcome email")
-            print(f"Email: {incoming_data.email}")
-            print(f"Verified provider count: {verified_provider_count}")
-            print(f"Is new: {is_new}")
-            print(f"Previous is verified: {previous_is_verified}")
-            print(f"Current is verified: {incoming_data.is_verified}")
             # Send welcome email if this is becoming the only verified provider
             await send_welcome_email(
                 email=incoming_data.email,

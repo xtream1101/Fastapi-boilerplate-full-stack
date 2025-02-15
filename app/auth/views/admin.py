@@ -13,7 +13,12 @@ from app.auth.utils import admin_required, current_user
 from app.common.db import get_async_session
 from app.common.templates import templates
 from app.common.utils import flash
-from app.email.send import send_invitation_email
+from app.email.send import (
+    send_invitation_email,
+    send_password_reset_email,
+    send_verification_email,
+    send_welcome_email,
+)
 from app.settings import settings
 
 router = APIRouter(tags=["Admin"], include_in_schema=False)
@@ -221,6 +226,61 @@ async def resend_invitation(
         flash(request, "Invitation email resent successfully", "success")
     except Exception as e:
         flash(request, f"Failed to send invitation email: {str(e)}", "error")
+
+    return RedirectResponse(
+        url=request.url_for("auth.admin"),
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
+
+
+@router.post("/admin/debug/send-test-email", name="auth.send_test_email")
+@admin_required
+async def send_test_email(
+    request: Request,
+    email_type: str = Form(...),
+    test_email: str = Form(...),
+    user: User = Depends(current_user),
+    session: AsyncSession = Depends(get_async_session),
+):
+    """Send a test email of the specified type."""
+    if not settings.SMTP_HOST:
+        flash(request, "Email sending is not configured", "error")
+        return RedirectResponse(
+            url=request.url_for("auth.admin"),
+            status_code=status.HTTP_303_SEE_OTHER,
+        )
+
+    try:
+        if email_type == "welcome":
+            await send_welcome_email(test_email, subject_prefix="[Test] ")
+        elif email_type == "verification":
+            # Create a dummy validation token
+            validation_token = str(uuid.uuid4())
+            await send_verification_email(
+                test_email, validation_token, subject_prefix="[Test] "
+            )
+        elif email_type == "password_reset":
+            # Create a dummy reset token
+            reset_token = str(uuid.uuid4())
+            await send_password_reset_email(
+                test_email, reset_token, subject_prefix="[Test] "
+            )
+        elif email_type == "invitation":
+            # Create a dummy invitation link
+            invitation_link = f"{settings.HOST}/register?invitation={uuid.uuid4()}"
+            await send_invitation_email(
+                test_email, invitation_link, subject_prefix="[Test] "
+            )
+        else:
+            flash(request, f"Unknown email type: {email_type}", "error")
+            return RedirectResponse(
+                url=request.url_for("auth.admin"),
+                status_code=status.HTTP_303_SEE_OTHER,
+            )
+
+        flash(request, f"Test {email_type} email sent successfully", "success")
+    except Exception as e:
+        flash(request, f"Failed to send test email: {str(e)}", "error")
 
     return RedirectResponse(
         url=request.url_for("auth.admin"),
