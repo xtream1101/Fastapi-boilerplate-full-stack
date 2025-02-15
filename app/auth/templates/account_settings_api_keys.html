@@ -23,21 +23,15 @@
                             </div>
                             <p class="text-xs opacity-70">
                                 Created:
-                                <span
-                                    data-timestamp="{{ key.created_at.isoformat() }}"
-                                    data-timestamp-format="MMMM D, YYYY h:mm A"
-                                >
-                                    {{ key.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                                <span data-timestamp="{{ key.created_at.isoformat() }}">
+                                    {{ key.created_at.strftime('%Y-%m-%d %H:%M') }}
                                 </span>
                             </p>
                             <p class="text-xs opacity-70">
                                 Last used:
                                 {% if key.last_used %}
-                                <span
-                                    data-timestamp="{{ key.last_used.isoformat() }}"
-                                    data-timestamp-format="MMMM D, YYYY h:mm A"
-                                >
-                                    {{ key.last_used.strftime('%Y-%m-%d %H:%M:%S') }}
+                                <span data-timestamp="{{ key.last_used.isoformat() }}">
+                                    {{ key.last_used.strftime('%Y-%m-%d %H:%M') }}
                                 </span>
                                 {% else %}
                                 Never

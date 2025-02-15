@@ -25,5 +25,4 @@
 - Add docs server using mkdocs
 - Add precommit hooks
 - Add dockerfile/docker-compose samples
-- Fix/update all email templates
 - Create a better light/dark theme
