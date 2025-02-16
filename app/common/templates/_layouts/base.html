@@ -13,6 +13,11 @@
     <!-- Styles -->
     <link href="{{ static_url(path='/dist/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+    {% if user %}
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    {% endif %}
+
     {% block extra_head %}{% endblock %}
 </head>
 <body class="min-h-screen flex flex-col">
