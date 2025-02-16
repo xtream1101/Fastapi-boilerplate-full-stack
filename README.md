@@ -26,3 +26,14 @@
 - Add precommit hooks
 - Add dockerfile/docker-compose samples
 - Create a better light/dark theme
+
+
+## Dev setup
+
+```bash
+uv sync
+```
+
+```bash
+npm install
+```

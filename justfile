@@ -14,7 +14,7 @@ start:
 # Run fast api dev server
 server-start:
     just --justfile {{ justfile() }} build-styles
-    @cd "{{ project_dir }}"; {{ infisical_command }} alembic upgrade head
+    @cd "{{ project_dir }}"; {{ infisical_command }} uv run alembic upgrade head
     @cd "{{ project_dir }}"; {{ infisical_command }} uv run fastapi dev app/app.py
 
 # Clear db and start all services
