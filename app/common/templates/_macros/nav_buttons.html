@@ -1,6 +1,0 @@
-{% macro render_nav_buttons() %}
-    {% if not settings.DISABLE_REGISTRATION %}
-    <a href="{{ url_for('auth.register') }}" class="btn-secondary">Sign up</a>
-    {% endif %}
-    <a href="{{ url_for('auth.login') }}" class="btn-primary">Sign in</a>
-{% endmacro %}

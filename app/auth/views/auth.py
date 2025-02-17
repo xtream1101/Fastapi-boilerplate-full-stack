@@ -68,7 +68,7 @@ async def login_view(
 ):
     if user:
         return RedirectResponse(
-            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
+            url=request.url_for("index"), status_code=status.HTTP_303_SEE_OTHER
         )
 
     # Check if there are any users
@@ -123,7 +123,7 @@ async def local_login(
             ),
         )
         response = RedirectResponse(
-            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
+            url=request.url_for("index"), status_code=status.HTTP_303_SEE_OTHER
         )
         response.set_cookie(settings.COOKIE_NAME, access_token)
         return response
@@ -161,7 +161,7 @@ async def register_view(
 ):
     if user:
         return RedirectResponse(
-            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
+            url=request.url_for("index"), status_code=status.HTTP_303_SEE_OTHER
         )
 
     # Check if there are any users
@@ -338,7 +338,7 @@ async def forgot_password_view(
     """Display the forgot password form."""
     if user:
         return RedirectResponse(
-            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
+            url=request.url_for("index"), status_code=status.HTTP_303_SEE_OTHER
         )
 
     if not is_smtp_configured():
@@ -376,7 +376,7 @@ async def forgot_password(
         )
     if user:
         return RedirectResponse(
-            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
+            url=request.url_for("index"), status_code=status.HTTP_303_SEE_OTHER
         )
 
     email = email.lower().strip()
@@ -457,7 +457,7 @@ async def reset_password_view(
     """Display the reset password form."""
     if user:
         return RedirectResponse(
-            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
+            url=request.url_for("index"), status_code=status.HTTP_303_SEE_OTHER
         )
 
     # Check if reset token exists and is valid
@@ -506,7 +506,7 @@ async def reset_password(
     """Process password reset request."""
     if user:
         return RedirectResponse(
-            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
+            url=request.url_for("index"), status_code=status.HTTP_303_SEE_OTHER
         )
 
     if password != confirm_password:

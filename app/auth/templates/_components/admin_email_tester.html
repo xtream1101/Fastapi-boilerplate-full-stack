@@ -1,16 +1,16 @@
 {% if settings.SMTP_HOST %}
-<div class="rounded-lg shadow-sm overflow-hidden" style="background-color: var(--bg-footer)">
+<div class="rounded-lg shadow-sm overflow-hidden">
     <div class="p-6">
-        <h3 class="text-lg font-semibold" style="color: var(--color-primary)">Email Debug</h3>
+        <h3 class="text-lg font-semibold">Email Debug</h3>
         <p class="mt-1 text-sm opacity-70">Send test emails to verify email functionality</p>
     </div>
-    <div class="border-t p-6" style="border-color: var(--border-color)">
+    <div class="border-t p-6">
         <form method="POST" action="{{ url_for('auth.send_test_email') }}" class="flex gap-4 items-end">
             <div class="flex-1">
                 <label for="test_email" class="block text-sm font-medium opacity-70 mb-1">Test Email Address</label>
                 <input type="email" name="test_email" id="test_email" required
                     class="w-full px-3 py-2 border rounded-md text-sm"
-                    style="background-color: var(--bg-main); border-color: var(--border-color)"
+
                     placeholder="test@example.com",
                     value="{{ user.email }}">
             </div>
@@ -18,7 +18,7 @@
                 <label for="email_type" class="block text-sm font-medium opacity-70 mb-1">Email Type</label>
                 <select name="email_type" id="email_type" required
                     class="w-full px-3 py-2 border rounded-md text-sm"
-                    style="background-color: var(--bg-main); border-color: var(--border-color)">
+                    >
                     <option value="welcome">Welcome Email</option>
                     <option value="verification">Verification Email</option>
                     <option value="password_reset">Password Reset Email</option>
@@ -27,7 +27,7 @@
             </div>
             <button type="submit"
                 class="px-4 py-2 text-sm font-medium rounded-md text-white"
-                style="background-color: var(--color-primary)">
+                >
                 Send Test Email
             </button>
         </form>

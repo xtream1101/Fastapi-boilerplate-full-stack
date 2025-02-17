@@ -3,49 +3,44 @@
 {% extends "common/templates/_layouts/base.html" %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8 p-8 rounded-lg shadow-sm" style="background-color: var(--bg-footer)">
+<div class="flex items-center justify-center">
+    <div class="max-w-md w-full">
         <div>
-            <h1 class="mt-6 text-center text-3xl font-bold" style="color: var(--color-primary)">
+            <h1 class="mt-6 text-center text-3xl font-bold">
                 Connect Local Account
             </h1>
 
-            <p class="mt-2 text-center text-sm" style="color: var(--color-primary)">
+            <p class="mt-2 text-center text-sm">
             Add support to login with email and password to your account.
         </p>
 
         <form action="{{ url_for('auth.connect_local.post') }}" method="POST" class="mt-8 space-y-6">
             <div>
                 <div class="flex justify-between items-center">
-                    <label for="email" class="block text-sm font-medium" style="color: var(--text-primary)">Email</label>
-                    <a href="{{ url_for('auth.change_email') }}" class="text-sm hover:opacity-90" style="color: var(--color-primary-dark)" tabindex="1">
+                    <label for="email" class="block text-sm font-medium">Email</label>
+                    <a href="{{ url_for('auth.change_email') }}" class="text-sm hover:opacity-90">
                         Change email?
                     </a>
                 </div>
-                <input type="email" name="email" id="email" required value="{{ user.email }}" readonly disabled
-                    class="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-stone-800 border border-gray-300 dark:border-stone-700 rounded-md shadow-sm text-gray-500 dark:text-stone-400">
-                <p class="mt-1 text-sm" style="color: var(--color-primary)">You'll use this email to log in.</p>
+                <input type="email" name="email" id="email" required value="{{ user.email }}" readonly disabled class="form-input">
+                <p class="mt-1 text-sm">You'll use this email to log in.</p>
             </div>
             <div>
-                <label for="password" class="block text-sm font-medium" style="color: var(--text-primary)">Password</label>
-                <input type="password" name="password" id="password" required
-                    class="mt-1 block w-full px-3 py-2 bg-white dark:bg-stone-950 border border-gray-300 dark:border-stone-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50"
-                    style="--tw-ring-color: var(--color-primary-dark); border-color: var(--color-primary-dark)">
+                <label for="password" class="block text-sm font-medium">Password</label>
+                <input type="password" name="password" id="password" required class="form-input">
             </div>
             <div>
-                <label for="confirm-password" class="block text-sm font-medium" style="color: var(--text-primary)">Confirm Password</label>
-                <input type="password" name="confirm_password" id="confirm-password" required
-                    class="mt-1 block w-full px-3 py-2 bg-white dark:bg-stone-950 border border-gray-300 dark:border-stone-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50"
-                    style="--tw-ring-color: var(--color-primary-dark); border-color: var(--color-primary-dark)">
+                <label for="confirm-password" class="block text-sm font-medium">Confirm Password</label>
+                <input type="password" name="confirm_password" id="confirm-password" required class="form-input">
             </div>
 
-            <button type="submit" class="w-full btn-primary">
+            <button type="submit" class="btn btn-primary w-full ">
                 Connect Account
             </button>
         </form>
 
-        <div class="text-center">
-            <a href="{{ url_for('auth.account_settings_providers') }}" class="text-sm font-medium hover:opacity-90" style="color: var(--color-primary-dark)">
+        <div class="text-center mt-3">
+            <a href="{{ url_for('auth.account_settings_providers') }}" class="btn btn-sm btn-mono">
                 Back to Account Settings
             </a>
         </div>

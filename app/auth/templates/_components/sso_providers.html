@@ -6,7 +6,7 @@
         {% endif %}
         <button
             type="submit"
-            class="flex w-full items-center justify-center gap-2 rounded-full bg-white dark:bg-stone-950 px-2 py-2 text-base font-medium ring-1 ring-inset ring-stone-300 dark:ring-stone-700 hover:bg-stone-50 dark:hover:bg-stone-900 focus-visible:ring-transparent"
+            class="flex w-full items-center justify-center gap-2 rounded-full px-2 py-2 text-base font-medium bg-white hover:bg-surface-200 dark:bg-surface-700 dark:hover:bg-surface-800 border border-surface-200 dark:border-surface-500 hover:border-surface-300 dark:hover:border-surface-700"
         >
             <img
                 src="{{ static_url('images/providers/' ~ provider.provider ~ '.png') }}"
@@ -17,7 +17,6 @@
             <span>
                 Continue with {{ provider.provider | title }}
             </span>
-            <span></span>
         </button>
     </form>
     {% endfor %}

@@ -81,7 +81,7 @@ async def verify_email(
 
     flash(request, "Email has been verified", "success")
     return RedirectResponse(
-        request.url_for("auth.account_settings_profile"),
+        request.url_for("auth.account_settings_providers"),
         status_code=status.HTTP_303_SEE_OTHER,
     )
 
@@ -100,7 +100,7 @@ async def resend_verification_email(
 ) -> RedirectResponse:
     # Always say the email has been sent, even if nothing was sent
     flash(request, "Verification email has been sent", "success")
-    redirect_url = "auth.account_settings" if user else "auth.login"
+    redirect_url = "auth.account_settings_providers" if user else "auth.login"
 
     # First check if email is in our system and its already verified
     provider_query = select(Provider).filter(
@@ -144,10 +144,6 @@ async def resend_verification_view(
     """
     Display the resend verification email page.
     """
-    if user:
-        return RedirectResponse(
-            url=request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER
-        )
     return templates.TemplateResponse(
         "auth/templates/resend_verification.html",
         {"request": request, "provider": provider, "email": email},

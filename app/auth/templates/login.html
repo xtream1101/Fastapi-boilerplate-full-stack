@@ -3,13 +3,13 @@
 {% extends "common/templates/_layouts/base.html" %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8 p-8 rounded-lg shadow-sm" style="background-color: var(--bg-footer)">
+<div class="flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 p-8">
         <div>
-            <h1 class="mt-6 text-center text-3xl font-bold" style="color: var(--color-primary)">
+            <h1 class="mt-6 text-center text-3xl font-bold">
                 Welcome Back
             </h1>
-            <p class="mt-2 text-center text-sm" style="color: var(--text-primary)">
+            <p class="mt-2 text-center text-sm">
                 Sign in to your account to continue
             </p>
         </div>
@@ -17,56 +17,51 @@
         <form id="login-form" class="mt-8 space-y-6" method="post" action="{{ url_for('auth.login.post') }}">
             <div class="space-y-4">
                 <div>
-                    <label for="email" class="block text-sm font-medium" style="color: var(--text-primary)">
+                    <label for="email" class="block text-sm font-medium">
                         Email address
                     </label>
-                    <input type="email" name="email" id="email" required
-                        class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50"
-                        style="--tw-ring-color: var(--color-primary); border-color: var(--border-color); background-color: var(--bg-main); color: var(--text-primary)">
+                    <input type="email" name="email" id="email" required class="form-input">
                 </div>
 
                 <div>
                     <div class="flex items-center justify-between">
-                        <label for="password" class="block text-sm font-medium" style="color: var(--text-primary)">
+                        <label for="password" class="block text-sm font-medium">
                             Password
                         </label>
                         {% if is_smtp_configured() %}
-                        <a href="{{ url_for('auth.forgot_password') }}" class="text-sm" style="color: var(--color-primary)">
+                        <a href="{{ url_for('auth.forgot_password') }}" class="text-accent-500 hover:text-accent-600">
                             Forgot password?
                         </a>
                         {% endif %}
                     </div>
-                    <input type="password" name="password" id="password" required
-                        class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50"
-                        style="--tw-ring-color: var(--color-primary); border-color: var(--border-color); background-color: var(--bg-main); color: var(--text-primary)">
+                    <input type="password" name="password" id="password" required class="form-input">
                 </div>
             </div>
 
             <div>
-                <button type="submit" class="btn-primary w-full">
+                <button type="submit" class="btn btn-primary w-full">
                     Sign in
                 </button>
             </div>
         </form>
 
         {% if list_of_sso_providers.keys()|length > 0 %}
-        <div class="relative my-6">
-            <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t" style="border-color: var(--border-color)"></div>
+        <div class="relative my-4">
+            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                <div class="w-full border-t border-stone-300 dark:border-stone-700"></div>
             </div>
-            <div class="relative flex justify-center text-sm">
-                <span class="px-2" style="color: var(--text-primary); background-color: var(--bg-footer)">Or continue with</span>
+            <div class="relative flex justify-center text-sm/6 font-medium">
+                <span class="bg-surface-100 dark:bg-surface-900 px-6">or</span>
             </div>
         </div>
-
         {% include "auth/templates/_components/sso_providers.html" %}
         {% endif %}
 
         {% if not settings.DISABLE_REGISTRATION %}
         <div class="text-center mt-6">
-            <p class="text-sm" style="color: var(--text-primary)">
+            <p class="text-sm">
                 Don't have an account?
-                <a href="{{ url_for('auth.register') }}" class="font-medium hover:opacity-90" style="color: var(--color-primary)">
+                <a href="{{ url_for('auth.register') }}" class="font-medium text-accent-500 hover:text-accent-600">
                     Create one now
                 </a>
             </p>
