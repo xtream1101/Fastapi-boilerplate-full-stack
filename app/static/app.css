@@ -3,131 +3,36 @@
 @tailwind utilities;
 
 @layer components {
-  .btn-circle-sm {
-    @apply p-1.5 rounded-full;
+  .btn {
+    @apply font-bold py-2 px-4 rounded text-white bg-primary-500 hover:bg-primary-700 dark:bg-primary-700 dark:hover:bg-primary-900;
   }
 
   .btn-secondary {
-    @apply bg-gray-100 hover:bg-gray-200 text-gray-700;
+    @apply text-white bg-accent-500 hover:bg-accent-600 dark:bg-accent-700 dark:hover:bg-accent-800;
   }
 
-  .btn-secondary--emerald {
-    @apply bg-emerald-100 hover:bg-emerald-200 text-emerald-700;
-  }
-
-  .btn-secondary--red {
-    @apply bg-red-100 hover:bg-red-200 text-red-700;
-  }
-
-  .form-input {
-    @apply mt-1 block w-full rounded-md shadow-sm sm:text-sm;
-    border: 1px solid var(--border-color);
-    background-color: var(--bg-footer);
-    color: var(--text-primary);
-  }
-
-  .form-input:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 1px var(--color-primary);
-  }
-
-  .btn-primary {
-    background-color: var(--color-primary);
-    color: white;
-    padding: 0.625rem 1.25rem;
-    border-radius: 0.5rem;
-    font-weight: 500;
-    transition: all 0.2s ease-in-out;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
-
-  .btn-primary:hover {
-    background-color: var(--color-primary-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .btn-secondary {
-    background-color: white;
-    color: var(--color-gray);
-    padding: 0.625rem 1.25rem;
-    border-radius: 0.5rem;
-    font-weight: 500;
-    transition: all 0.2s ease-in-out;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
-
-  .btn-secondary:hover {
-    background-color: #f8fafc;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  .btn-mono {
+    @apply text-surface-900 dark:text-surface-100 bg-white hover:bg-surface-200 dark:bg-surface-800 dark:hover:bg-surface-900 border border-surface-200 dark:border-surface-600 hover:border-surface-300 dark:hover:border-surface-700;
   }
 
   .btn-alert {
-    @apply bg-red-600 text-white px-5 py-2.5 rounded-lg font-medium;
-    transition: all 0.2s ease-in-out;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    @apply text-white bg-red-500 hover:bg-alert-700 dark:bg-red-700 dark:hover:bg-alert-900;
+
   }
 
-  .btn-alert:hover {
-    @apply bg-red-700;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  .btn-sm {
+    @apply text-sm py-1 px-2;
   }
 
-  .nav-link {
-    color: var(--color-gray);
-    font-weight: 500;
-    transition: color 0.2s ease-in-out;
+  .form-input {
+    @apply block w-full my-2 px-3 py-2 border rounded text-surface-900 dark:text-surface-100 bg-white dark:bg-surface-800 border-surface-200 dark:border-surface-700 focus:outline-none focus:border-accent-500 dark:focus:border-accent-800 focus:ring-accent-500 dark:focus:ring-accent-800 sm:text-sm;
   }
 
-  .nav-link:hover {
-    color: var(--color-primary);
-  }
-}
-
-@layer base {
-  :root {
-    --ss-primary-color: theme('colors.accent.DEFAULT');
-    --ss-font-color: theme('colors.gray.900');
-    color-scheme: light dark;
-    --color-primary: #228be6;
-    --color-primary-dark: #1971c2;
-    --color-gray: #343a40;
-    --color-accent: #495057;
-    --bg-main: #ffffff;
-    --bg-header: rgba(255, 255, 255, 0.9);
-    --bg-footer: #f8f9fa;
-    --text-primary: #343a40;
-    --border-color: #dee2e6;
+  .form-select {
+    @apply block w-full my-2 px-3 py-2 border rounded text-surface-900 dark:text-surface-100 bg-white dark:bg-surface-800 border-surface-200 dark:border-surface-700 focus:outline-none focus:border-accent-500 dark:focus:border-accent-800 focus:ring-accent-500 dark:focus:ring-accent-800 sm:text-sm;
   }
 
-  .dark:root  {
-    --ss-primary-color: theme('colors.accent.light');
-    --ss-font-color: theme('colors.white');
-    --color-primary: #4dabf7;
-    --color-primary-dark: #228be6;
-    --color-gray: #dee2e6;
-    --color-accent: #adb5bd;
-    --bg-main: #1a1a1a;
-    --bg-header: rgba(26, 26, 26, 0.9);
-    --bg-footer: #343a40;
-    --text-primary: #f8f9fa;
-    --border-color: #495057;
-  }
-
-  html {
-    font-family: "Outfit", "Inter var", "Inter", "Arial", sans-serif;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: var(--text-primary);
-    background-color: var(--bg-main);
+  .account-badge {
+    @apply inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset;
   }
 }

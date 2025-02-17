@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container mx-auto pb-16">
-    <div class="max-w-md mx-auto bg-white dark:bg-stone-950 rounded-xl shadow-xl p-8">
+    <div class="max-w-md mx-auto p-8">
         <h1 class="text-2xl font-semibold mb-6 text-center">
             Oops, your account is not verified!
         </h1>
@@ -13,7 +13,7 @@
             <input type="hidden" name="email" value="{{ email }}">
             <input type="hidden" name="provider_name" value="{{ provider }}">
             <div>
-                <button type="submit" class="w-full btn-primary">
+                <button type="submit" class="w-full btn btn-primary">
                     Resend Verification Email
                 </button>
             </div>
@@ -26,7 +26,7 @@
         <div class="mt-6 text-center">
             <p class="text-sm">
                 Login with a different account?
-                <a href="{{ url_for('auth.login') }}" class="font-medium text-yellow-600 hover:text-yellow-500">
+                <a href="{{ url_for('auth.login') }}" class="font-medium text-accent-500 hover:text-accent-600">
                     Login here
                 </a>
             </p>

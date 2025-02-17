@@ -8,7 +8,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from app.auth import router as auth_router
 from app.auth.models import User
-from app.auth.utils import current_user, optional_current_user
+from app.auth.utils import optional_current_user
 from app.common.exceptions import AuthBannedError, UserNotVerifiedError
 from app.common.templates import templates
 from app.common.utils import flash
@@ -41,12 +41,6 @@ app.include_router(auth_router)
 @app.get("/", name="index", include_in_schema=False)
 async def index(request: Request, user: User | None = Depends(optional_current_user)):
     return templates.TemplateResponse(request, "common/templates/index.html")
-
-
-@app.get("/dashboard", name="dashboard", include_in_schema=False)
-async def dashboard(request: Request, user: User = Depends(current_user)):
-    """Dashboard view requiring authentication"""
-    return templates.TemplateResponse(request, "common/templates/dashboard.html")
 
 
 @app.exception_handler(status.HTTP_404_NOT_FOUND)

@@ -4,6 +4,7 @@
     "build-styles": "npx tailwindcss -i ./app/static/app.css -o ./app/static/dist/app.css"
   },
   "dependencies": {
+    "@tailwindcss/forms": "^0.5.10",
     "tailwindcss": "^3.4.17"
   },
   "devDependencies": {

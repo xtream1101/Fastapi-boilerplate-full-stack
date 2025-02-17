@@ -20,44 +20,33 @@
 
     {% block extra_head %}{% endblock %}
 </head>
-<body class="min-h-screen flex flex-col">
-    <header class="shadow-sm backdrop-blur-sm sticky top-0 z-50" style="background-color: var(--bg-header)">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<body class="min-h-screen flex flex-col bg-surface-100 dark:bg-surface-900 text-surface-900 dark:text-surface-100">
+    <header class="h-16 shadow-sm backdrop-blur-sm sticky top-0 z-50 bg-surface-200 dark:bg-surface-950 bg-opacity-90 dark:bg-opacity-90">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
             <div class="flex justify-between h-16">
                 <div class="flex items-center space-x-8">
                     <div class="flex-shrink-0 flex items-center">
-                        <a href="{{ url_for('index') }}" class="text-2xl font-bold bg-gradient-to-r from-primary-500 to-primary-700 bg-clip-text text-transparent">
+                        <a href="{{ url_for('index') }}" class="text-2xl font-bold">
                             {{ settings.APP_NAME }}
                         </a>
                     </div>
-                    <div class="hidden md:flex items-center space-x-6">
-                        <a href="#features" class="nav-link">Features</a>
-                        <a href="#docs" class="nav-link">Documentation</a>
-                        <a href="#about" class="nav-link">About</a>
-                    </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors">
                         <!-- Sun icon -->
-                        <svg class="w-5 h-5 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="w-5 h-5 block dark:hidden" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
                         </svg>
                         <!-- Moon icon -->
-                        <svg class="w-5 h-5 block dark:hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="w-5 h-5 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
                         </svg>
                     </button>
                     {% if user %}
                     <div class="flex items-center space-x-4">
-                        <a href="{{ url_for('dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white flex items-center space-x-1">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                            </svg>
-                            <span>Dashboard</span>
-                        </a>
                         <div class="relative" x-data="{ open: false }" @click.away="open = false">
                             <button @click="open = !open" class="flex items-center space-x-2">
-                                <div class="size-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 font-medium">
+                                <div class="size-8 rounded-full bg-accent-400 flex items-center justify-center text-surface-700 font-medium leading-none">
                                     {{ user.display_name[:1] }}
                                 </div>
                             </button>
@@ -69,27 +58,29 @@
                                 x-transition:leave="transition ease-in duration-75"
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95"
-                                class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 dark:ring-gray-700"
+                                class="absolute right-0 mt-2 w-48 rounded-md bg-surface-50 dark:bg-surface-800"
                                 style="display: none;">
                                 <div class="py-1">
                                     <div class="px-4 py-2 text-sm">
-                                        <div class="font-medium text-gray-900 dark:text-gray-100">{{ user.display_name }}</div>
-                                        <div class="text-gray-500 dark:text-gray-400">{{ user.email }}</div>
+                                        <div class="font-medium text-surface-900 dark:text-surface-100">{{ user.display_name }}</div>
+                                        <div class="text-surface-500 dark:text-surface-400">{{ user.email }}</div>
                                     </div>
-                                    <div class="border-t border-gray-100 dark:border-gray-700"></div>
-                                    <a href="{{ url_for('auth.account_settings') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Account Settings</a>
+                                    <div class="border-t border-surface-100 dark:border-surface-700"></div>
+                                    <a href="{{ url_for('auth.account_settings') }}" class="block px-4 py-2 text-sm text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-700">Account Settings</a>
                                     {% if user.is_admin %}
-                                    <a href="{{ url_for('auth.admin') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Admin Dashboard</a>
+                                    <a href="{{ url_for('auth.admin') }}" class="block px-4 py-2 text-sm text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-700">Admin Dashboard</a>
                                     {% endif %}
-                                    <div class="border-t border-gray-100 dark:border-gray-700"></div>
-                                    <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">Sign Out</a>
+                                    <div class="border-t border-surface-100 dark:border-surface-700"></div>
+                                    <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm text-alert-600 dark:text-alert-400 hover:bg-surface-100 dark:hover:bg-surface-700">Sign Out</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     {% else %}
-                    {% from "common/templates/_macros/nav_buttons.html" import render_nav_buttons with context %}
-                    {{ render_nav_buttons() }}
+                        {% if not settings.DISABLE_REGISTRATION %}
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-secondary">Sign up</a>
+                        {% endif %}
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Sign in</a>
                     {% endif %}
                 </div>
             </div>
@@ -97,17 +88,17 @@
     </header>
 
     <main class="min-h-screen">
-        <div class="min-h-screen flex-grow {% if user %}pt-6{% endif %} px-4 sm:px-6 lg:px-8" style="background-color: var(--bg-main);">
+        <div class="min-h-screen flex-grow {% if user %}pt-6{% endif %} px-4 sm:px-6 lg:px-8">
             {% include "common/templates/_components/flash_messages.html" %}
             {% block content %}{% endblock %}
         </div>
     </main>
 
-    <footer class="mt-auto border-t" style="background-color: var(--bg-footer); border-color: var(--border-color)">
+    <footer class="mt-auto border-t border-surface-300 dark:border-surface-700">
         <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
-                    <h3 class="text-sm font-semibold text-gray-600 tracking-wider uppercase">Product</h3>
+                    <h3 class="text-sm font-semibold text-surface-400 dark:text-surface-600 tracking-wider uppercase">Product</h3>
                     <ul class="mt-4 space-y-3">
                         <li><a href="#" class="nav-link text-sm">Features</a></li>
                         <li><a href="#" class="nav-link text-sm">Documentation</a></li>
@@ -115,7 +106,7 @@
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-sm font-semibold text-gray-600 tracking-wider uppercase">Support</h3>
+                    <h3 class="text-sm font-semibold text-surface-400 dark:text-surface-600 tracking-wider uppercase">Support</h3>
                     <ul class="mt-4 space-y-3">
                         <li><a href="#" class="nav-link text-sm">Help Center</a></li>
                         <li><a href="#" class="nav-link text-sm">Community</a></li>
@@ -123,15 +114,15 @@
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-sm font-semibold text-gray-600 tracking-wider uppercase">Legal</h3>
+                    <h3 class="text-sm font-semibold text-surface-400 dark:text-surface-600 tracking-wider uppercase">Legal</h3>
                     <ul class="mt-4 space-y-3">
                         <li><a href="#" class="nav-link text-sm">Privacy</a></li>
                         <li><a href="#" class="nav-link text-sm">Terms</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="mt-8 pt-8 border-t border-gray-200">
-                <p class="text-center text-gray-500 text-sm">© 2025 FastAPI Boilerplate. All rights reserved.</p>
+            <div class="mt-8 pt-8 border-t border-surface-300 dark:border-surface-700">
+                <p class="text-center text-surface-500 text-sm">© 2025 FastAPI Boilerplate. All rights reserved.</p>
             </div>
         </div>
     </footer>

@@ -21,11 +21,14 @@
 
 ## TODO's
 
-- Better admin interface
 - Add docs server using mkdocs
 - Add precommit hooks
 - Add dockerfile/docker-compose samples
-- Create a better light/dark theme
+- Pages to still improve
+    - 404 page
+    - Resend verification email
+    - Admin dashboard
+    - Flash messages
 
 
 ## Dev setup
