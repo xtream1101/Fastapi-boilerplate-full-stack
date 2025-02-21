@@ -26,7 +26,6 @@
 - Add dockerfile/docker-compose samples
 - Pages to still improve
     - 404 page
-    - Resend verification email
     - Admin dashboard
     - Flash messages
 

@@ -1,0 +1,41 @@
+{% extends "auth/templates/_layouts/admin_base.html" %}
+{% set active_section = "email" %}
+
+{% block settings_content %}
+<div class="flex flex-col mx-auto justify-center gap-4">
+    <!-- Email Testing -->
+    {% if settings.SMTP_HOST %}
+    <div class="bg-surface-100 dark:bg-surface-900 rounded-xl shadow-xl p-6">
+        <div class="border-b border-surface-300 dark:border-surface-700 pb-4 mb-4">
+            <h2 class="text-lg font-semibold">Email Debug</h2>
+            <p class="text-sm opacity-70">Send test emails to verify email functionality</p>
+        </div>
+        <div>
+            <form method="POST" action="{{ url_for('auth.send_test_email') }}" class="flex gap-4 items-end">
+                <div class="flex-1">
+                    <label for="test_email" class="block text-sm font-medium opacity-70 mb-1">Test Email Address</label>
+                    <input type="email" name="test_email" id="test_email" required
+                        class="form-input"
+                        placeholder="test@example.com"
+                        value="{{ user.email }}">
+                </div>
+                <div>
+                    <label for="email_type" class="block text-sm font-medium opacity-70 mb-1">Email Type</label>
+                    <select name="email_type" id="email_type" required class="form-select">
+                        <option value="welcome">Welcome Email</option>
+                        <option value="verification">Verification Email</option>
+                        <option value="password_reset">Password Reset Email</option>
+                        <option value="invitation">Invitation Email</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    Send Test Email
+                </button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+
+</div>
+{% endblock %}

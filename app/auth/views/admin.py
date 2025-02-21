@@ -36,7 +36,7 @@ async def admin_reset_password(
     if user.id == user_id:
         flash(request, "Cannot reset your own password this way", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -50,7 +50,7 @@ async def admin_reset_password(
     if not target_user:
         flash(request, "User not found", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -59,7 +59,7 @@ async def admin_reset_password(
     if not has_local_provider:
         flash(request, "User does not have a password-based login", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -96,7 +96,7 @@ async def admin_reset_password(
         reset_url=reset_url,
     )
     return RedirectResponse(
-        url=request.url_for("auth.admin"),
+        url=request.url_for("auth.admin_users"),
         status_code=status.HTTP_303_SEE_OTHER,
     )
 
@@ -113,7 +113,7 @@ async def invite_user(
     if not settings.DISABLE_REGISTRATION:
         flash(request, "Registration is not disabled", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -123,7 +123,7 @@ async def invite_user(
     if result.scalar_one_or_none():
         flash(request, "User with this email already exists", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -137,7 +137,7 @@ async def invite_user(
     if result.scalar_one_or_none():
         flash(request, "An active invitation already exists for this email", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -170,7 +170,7 @@ async def invite_user(
         )
 
     return RedirectResponse(
-        url=request.url_for("auth.admin"),
+        url=request.url_for("auth.admin_users"),
         status_code=status.HTTP_303_SEE_OTHER,
     )
 
@@ -187,7 +187,7 @@ async def resend_invitation(
     if not settings.SMTP_HOST:
         flash(request, "Email sending is not configured", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -198,21 +198,21 @@ async def resend_invitation(
     if not invitation:
         flash(request, "Invitation not found", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
     if invitation.is_used:
         flash(request, "Invitation has already been used", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
     if invitation.is_expired:
         flash(request, "Invitation has expired", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -228,7 +228,7 @@ async def resend_invitation(
         flash(request, f"Failed to send invitation email: {str(e)}", "error")
 
     return RedirectResponse(
-        url=request.url_for("auth.admin"),
+        url=request.url_for("auth.admin_users"),
         status_code=status.HTTP_303_SEE_OTHER,
     )
 
@@ -246,7 +246,7 @@ async def send_test_email(
     if not settings.SMTP_HOST:
         flash(request, "Email sending is not configured", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_email"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -274,7 +274,7 @@ async def send_test_email(
         else:
             flash(request, f"Unknown email type: {email_type}", "error")
             return RedirectResponse(
-                url=request.url_for("auth.admin"),
+                url=request.url_for("auth.admin_email"),
                 status_code=status.HTTP_303_SEE_OTHER,
             )
 
@@ -283,14 +283,25 @@ async def send_test_email(
         flash(request, f"Failed to send test email: {str(e)}", "error")
 
     return RedirectResponse(
-        url=request.url_for("auth.admin"),
+        url=request.url_for("auth.admin_email"),
         status_code=status.HTTP_303_SEE_OTHER,
     )
 
 
-@router.get("/admin", name="auth.admin")
+@router.get("/admin", name="auth.admin", summary="Default admin view")
+async def admin_view(request: Request):
+    """
+    Redirect to profile settings page.
+    """
+    return RedirectResponse(
+        url=request.url_for("auth.admin_users"),
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
+
+
+@router.get("/admin/users", name="auth.admin_users")
 @admin_required
-async def admin_view(
+async def admin_users_view(
     request: Request,
     user: User = Depends(current_user),
     session: AsyncSession = Depends(get_async_session),
@@ -320,8 +331,23 @@ async def admin_view(
 
     return templates.TemplateResponse(
         request,
-        "auth/templates/admin.html",
+        "auth/templates/admin_users.html",
         {"users": users, "invitations": invitations},
+    )
+
+
+@router.get("/admin/email", name="auth.admin_email")
+@admin_required
+async def admin_email_view(
+    request: Request,
+    user: User = Depends(current_user),
+    session: AsyncSession = Depends(get_async_session),
+):
+    """Admin page for user management."""
+    return templates.TemplateResponse(
+        request,
+        "auth/templates/admin_email.html",
+        {},
     )
 
 
@@ -337,7 +363,7 @@ async def toggle_user_ban(
     if user.id == user_id:
         flash(request, "Cannot ban yourself", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -348,14 +374,14 @@ async def toggle_user_ban(
     if not target_user:
         flash(request, "User not found", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
     if target_user.is_admin:
         flash(request, "Cannot ban admin users", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -365,7 +391,7 @@ async def toggle_user_ban(
     action = "banned" if target_user.is_banned else "unbanned"
     flash(request, f"User {action} successfully", "success")
     return RedirectResponse(
-        url=request.url_for("auth.admin"),
+        url=request.url_for("auth.admin_users"),
         status_code=status.HTTP_303_SEE_OTHER,
     )
 
@@ -386,7 +412,7 @@ async def delete_invitation(
     if not invitation:
         flash(request, "Invitation not found", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -395,7 +421,7 @@ async def delete_invitation(
 
     flash(request, "Invitation deleted successfully", "success")
     return RedirectResponse(
-        url=request.url_for("auth.admin"),
+        url=request.url_for("auth.admin_users"),
         status_code=status.HTTP_303_SEE_OTHER,
     )
 
@@ -412,7 +438,7 @@ async def delete_user(
     if user.id == user_id:
         flash(request, "Cannot delete yourself", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -423,14 +449,14 @@ async def delete_user(
     if not target_user:
         flash(request, "User not found", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
     if target_user.is_admin:
         flash(request, "Cannot delete admin users", "error")
         return RedirectResponse(
-            url=request.url_for("auth.admin"),
+            url=request.url_for("auth.admin_users"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
@@ -439,6 +465,6 @@ async def delete_user(
 
     flash(request, "User deleted successfully", "success")
     return RedirectResponse(
-        url=request.url_for("auth.admin"),
+        url=request.url_for("auth.admin_users"),
         status_code=status.HTTP_303_SEE_OTHER,
     )

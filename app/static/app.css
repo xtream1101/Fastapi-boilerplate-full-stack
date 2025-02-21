@@ -25,11 +25,11 @@
   }
 
   .form-input {
-    @apply block w-full my-2 px-3 py-2 border rounded text-surface-900 dark:text-surface-100 bg-white dark:bg-surface-800 border-surface-200 dark:border-surface-700 focus:outline-none focus:border-accent-500 dark:focus:border-accent-800 focus:ring-accent-500 dark:focus:ring-accent-800 sm:text-sm;
+    @apply block w-full px-3 py-2 border rounded text-surface-900 dark:text-surface-100 bg-white dark:bg-surface-800 border-surface-200 dark:border-surface-700 focus:outline-none focus:border-accent-500 dark:focus:border-accent-800 focus:ring-accent-500 dark:focus:ring-accent-800 sm:text-sm;
   }
 
   .form-select {
-    @apply block w-full my-2 px-3 py-2 border rounded text-surface-900 dark:text-surface-100 bg-white dark:bg-surface-800 border-surface-200 dark:border-surface-700 focus:outline-none focus:border-accent-500 dark:focus:border-accent-800 focus:ring-accent-500 dark:focus:ring-accent-800 sm:text-sm;
+    @apply block w-full px-3 py-2 border rounded text-surface-900 dark:text-surface-100 bg-white dark:bg-surface-800 border-surface-200 dark:border-surface-700 focus:outline-none focus:border-accent-500 dark:focus:border-accent-800 focus:ring-accent-500 dark:focus:ring-accent-800 sm:text-sm;
   }
 
   .account-badge {
