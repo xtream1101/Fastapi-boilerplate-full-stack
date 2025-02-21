@@ -20,8 +20,8 @@
 
     {% block extra_head %}{% endblock %}
 </head>
-<body class="min-h-screen flex flex-col bg-surface-100 dark:bg-surface-900 text-surface-900 dark:text-surface-100">
-    <header class="h-16 shadow-sm backdrop-blur-sm sticky top-0 z-50 bg-surface-200 dark:bg-surface-950 bg-opacity-90 dark:bg-opacity-90">
+<body class="min-h-screen flex flex-col bg-surface-200 dark:bg-surface-800 text-surface-800 dark:text-surface-200">
+    <header class="h-16 shadow-sm backdrop-blur-sm sticky top-0 z-50 bg-surface-300 dark:bg-surface-900 bg-opacity-90 dark:bg-opacity-90">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
             <div class="flex justify-between h-16">
                 <div class="flex items-center space-x-8">
@@ -88,7 +88,7 @@
     </header>
 
     <main class="min-h-screen">
-        <div class="min-h-screen flex-grow {% if user %}pt-6{% endif %} px-4 sm:px-6 lg:px-8">
+        <div class="min-h-screen flex-grow pt-4 pb-6 px-4 sm:px-6 lg:px-8">
             {% include "common/templates/_components/flash_messages.html" %}
             {% block content %}{% endblock %}
         </div>

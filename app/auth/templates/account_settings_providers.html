@@ -2,7 +2,7 @@
 {% set active_section = "providers" %}
 
 {% block settings_content %}
-<div>
+<div class="flex flex-col mx-auto justify-center bg-surface-100 dark:bg-surface-900 rounded-xl shadow-xl p-6">
     <div class="border-b border-surface-300 dark:border-surface-700 pb-4 mb-4">
         <h2 class="text-lg font-semibold">Connected Providers</h2>
         <p class="text-sm opacity-70">Manage your connected authentication providers</p>
@@ -13,7 +13,7 @@
         {% if user.providers %}
             <div class="space-y-4">
                 {% for provider in user.providers %}
-                    <div class="flex items-center justify-between p-4 rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-950">
+                    <div class="flex items-center justify-between p-4 rounded-lg border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800">
                         <div class="space-y-1">
                             <div class="flex items-center gap-2">
                                 <img
@@ -75,7 +75,7 @@
                 {% set connected_providers = user.providers | map(attribute='name') | list %}
 
                 {% if 'local' not in connected_providers %}
-                <a href="{{ url_for('auth.connect_local') }}" class="relative flex items-center justify-center space-x-2 rounded-full px-2 py-2 text-base font-medium bg-white hover:bg-surface-200 dark:bg-surface-800 dark:hover:bg-surface-900 border border-surface-200 dark:border-surface-600 hover:border-surface-300 dark:hover:border-surface-700">
+                <a href="{{ url_for('auth.connect_local') }}" class="relative flex items-center justify-center space-x-2 rounded-full px-2 py-2 text-base font-medium bg-surface-200 hover:bg-surface-300 dark:bg-surface-800 dark:hover:bg-surface-900 border border-surface-300 dark:border-surface-600 hover:border-surface-400 dark:hover:border-surface-700">
                     <div class="flex-shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
                             <path fill-rule="evenodd" d="M17.834 6.166a8.25 8.25 0 1 0 0 11.668.75.75 0 0 1 1.06 1.06c-3.807 3.808-9.98 3.808-13.788 0-3.808-3.807-3.808-9.98 0-13.788 3.807-3.808 9.98-3.808 13.788 0A9.722 9.722 0 0 1 21.75 12c0 .975-.296 1.887-.809 2.571-.514.685-1.28 1.179-2.191 1.179-.904 0-1.666-.487-2.18-1.164a5.25 5.25 0 1 1-.82-6.26V8.25a.75.75 0 0 1 1.5 0V12c0 .682.208 1.27.509 1.671.3.401.659.579.991.579.332 0 .69-.178.991-.579.3-.4.509-.99.509-1.671a8.222 8.222 0 0 0-2.416-5.834ZM15.75 12a3.75 3.75 0 1 0-7.5 0 3.75 3.75 0 0 0 7.5 0Z" clip-rule="evenodd" />
@@ -87,7 +87,7 @@
 
                 {% for provider_name in list_of_sso_providers.keys() %}
                     {% if provider_name not in connected_providers and provider_name != 'local' %}
-                    <a href="{{ url_for('auth.providers.connect', provider=provider_name) }}" class="relative flex items-center justify-center space-x-2 rounded-full px-2 py-2 text-base font-medium bg-white hover:bg-surface-200 dark:bg-surface-700 dark:hover:bg-surface-800 border border-surface-200 dark:border-surface-500 hover:border-surface-300 dark:hover:border-surface-700">
+                    <a href="{{ url_for('auth.providers.connect', provider=provider_name) }}" class="relative flex items-center justify-center space-x-2 rounded-full px-2 py-2 text-base font-medium bg-surface-200 hover:bg-surface-300 dark:bg-surface-700 dark:hover:bg-surface-800 border border-surface-300 dark:border-surface-500 hover:border-surface-400 dark:hover:border-surface-700">
                         <img
                             src="{{ static_url('images/providers/' ~ provider_name ~ '.png') }}"
                             alt="{{ provider_name }}"

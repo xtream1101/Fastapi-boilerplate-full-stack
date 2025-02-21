@@ -3,22 +3,22 @@
 {% extends "common/templates/_layouts/base.html" %}
 
 {% block content %}
-<div class="flex items-center justify-center">
-    <div class="max-w-md w-full">
+<div class="flex items-center max-w-md mx-auto justify-center bg-surface-100 dark:bg-surface-900 rounded-xl shadow-xl">
+    <div class="max-w-md w-full space-y-8 p-8">
         <div>
             <h1 class="mt-6 text-center text-3xl font-bold">
                 Connect Local Account
             </h1>
-
             <p class="mt-2 text-center text-sm">
-            Add support to login with email and password to your account.
-        </p>
+                Add support to login with email and password to your account
+            </p>
+        </div>
 
         <form action="{{ url_for('auth.connect_local.post') }}" method="POST" class="mt-8 space-y-6">
             <div>
                 <div class="flex justify-between items-center">
                     <label for="email" class="block text-sm font-medium">Email</label>
-                    <a href="{{ url_for('auth.change_email') }}" class="text-sm hover:opacity-90">
+                    <a href="{{ url_for('auth.change_email') }}" class="text-sm text-accent-500 hover:text-accent-600">
                         Change email?
                     </a>
                 </div>
@@ -39,10 +39,13 @@
             </button>
         </form>
 
-        <div class="text-center mt-3">
-            <a href="{{ url_for('auth.account_settings_providers') }}" class="btn btn-sm btn-mono">
-                Back to Account Settings
-            </a>
+        <div class="text-center mt-6">
+            <p class="text-sm">
+                <-- Back to
+                <a href="{{ url_for('auth.account_settings') }}" class="font-medium text-accent-500 hover:text-accent-600">
+                    Account Settings
+                </a>
+            </p>
         </div>
     </div>
 </div>

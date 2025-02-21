@@ -3,9 +3,9 @@
 {% extends "common/templates/_layouts/base.html" %}
 
 {% block content %}
-<div class="container mx-auto pb-16">
-    <div class="max-w-md mx-auto p-8">
-        <h1 class="text-2xl font-semibold mb-6 text-center">
+<div class="flex items-center max-w-md mx-auto justify-center bg-surface-100 dark:bg-surface-900 rounded-xl shadow-xl">
+    <div class="max-w-md w-full space-y-8 p-8">
+        <h1 class="text-center mt-6 text-3xl font-bold">
             Oops, your account is not verified!
         </h1>
 
@@ -18,12 +18,10 @@
                 </button>
             </div>
         </form>
-        <p class="text-sm text-center text-stone-500">
-            Resend your verification email to {{ email }}.
+        <p class="text-sm text-center">
+            Resend your verification email to {{ email }}
         </p>
-
-
-        <div class="mt-6 text-center">
+        <div class="text-center mt-6">
             <p class="text-sm">
                 Login with a different account?
                 <a href="{{ url_for('auth.login') }}" class="font-medium text-accent-500 hover:text-accent-600">
