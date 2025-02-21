@@ -1,0 +1,29 @@
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    pull_policy: always
+    ports:
+      - 8000:8000
+      - 8080:8080
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: $DATABASE_USER
+      POSTGRES_PASSWORD: $DATABASE_PASSWORD
+      POSTGRES_DB: $DATABASE_NAME
+    volumes:
+      - fastapi-template-db:/var/lib/postgresql/data
+
+
+volumes:
+  fastapi-template-db:
