@@ -56,50 +56,5 @@ def static_url(context: dict, path: str) -> str:
 
 @jinja_global_function
 @pass_context
-def snippet_view_url(context: dict, snippet_id) -> str:
-    return context["request"].url_for("snippet.view", id=snippet_id)
-
-
-@jinja_global_function
-@pass_context
-def snippets_index_url(
-    context: dict,
-    snippet_id=None,
-    q=None,
-    lang=None,
-    tag=None,
-    is_public=None,
-    is_archived=None,
-) -> str:
-    request = context["request"]
-    params = {}
-
-    curr_tab = request.query_params.get("tab")
-    curr_query = request.query_params.get("q")
-
-    if curr_tab:
-        params["tab"] = curr_tab
-
-    if snippet_id:
-        params["selected_id"] = snippet_id
-
-    if q or isinstance(q, str):
-        params["q"] = q
-    elif lang:
-        params["q"] = f"lang:{lang.lower()}"
-    elif tag:
-        params["q"] = f'tag:"{tag}"'
-    elif is_public:
-        params["q"] = "is:public"
-    elif is_archived:
-        params["q"] = "is:archived"
-    elif curr_query:
-        params["q"] = curr_query
-
-    return request.url_for("snippets.index").include_query_params(**params)
-
-
-@jinja_global_function
-@pass_context
 def get_flashed_messages(context: dict) -> list:
     return utils.get_flashed_messages(context["request"])

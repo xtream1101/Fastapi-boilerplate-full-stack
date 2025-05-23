@@ -7,9 +7,9 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                surface: colors.neutral,
+                surface: colors.zinc,
                 secondary: colors.slate,
-                primary: colors.indigo,
+                primary: colors.blue,
                 accent: colors.sky,
                 alert: colors.rose,
             },

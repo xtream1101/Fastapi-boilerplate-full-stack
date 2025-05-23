@@ -12,6 +12,7 @@ from app.auth.utils import optional_current_user
 from app.common.exceptions import AuthBannedError, UserNotVerifiedError
 from app.common.templates import templates
 from app.common.utils import flash
+from app.common.views import dashboard
 from app.logger import init_logging
 from app.settings import settings
 
@@ -36,6 +37,8 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # Include routers
 app.include_router(auth_router)
+# Include other routers here as needed
+app.include_router(dashboard.router)
 
 
 @app.get("/", name="index", include_in_schema=False)

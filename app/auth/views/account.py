@@ -518,7 +518,7 @@ async def delete_account(
     Permanently delete a user's account and all associated data.
     """
     try:
-        # Delete the user (which will cascade delete providers, snippets, and api_keys)
+        # Delete the user (which will cascade delete providers, api_keys, etc)
         user_query = select(User).filter(User.id == user.id)
         result = await session.execute(user_query)
         user_to_delete = result.scalar_one_or_none()
