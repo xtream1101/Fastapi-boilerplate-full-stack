@@ -40,7 +40,7 @@ supported_providers = (
 providers = {}
 for provider in supported_providers:
     if provider.is_enabled:
-        providers[provider.provider.lower()] = provider
+        providers[provider.provider] = provider
 
 
 import base64
@@ -49,7 +49,7 @@ import json
 
 @router.get("/{provider}/login", name="auth.providers.login", tags=["SSO"])
 async def sso_login(provider: str, request: Request):
-    provider = providers.get(provider.lower())
+    provider = providers.get(provider)
     if not provider:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Provider not found"
@@ -73,7 +73,7 @@ async def sso_login(provider: str, request: Request):
 @router.get("/{provider}/connect", name="auth.providers.connect", tags=["SSO"])
 async def sso_connect(provider: str):
     """Start OAuth flow for connecting to existing account"""
-    provider = providers.get(provider.lower())
+    provider = providers.get(provider)
     if not provider:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Provider not found"
@@ -90,7 +90,7 @@ async def sso_callback(
     session: AsyncSession = Depends(get_async_session),
 ):
     """Process login response and return user info"""
-    provider = providers.get(provider_name.lower())
+    provider = providers.get(provider_name)
     if not provider:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Provider not found"
