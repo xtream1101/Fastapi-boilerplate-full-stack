@@ -40,7 +40,7 @@ supported_providers = (
 providers = {}
 for provider in supported_providers:
     if provider.is_enabled:
-        providers[provider.provider] = provider
+        providers[provider.provider.lower()] = provider
 
 
 import base64
